@@ -1,34 +1,41 @@
 from flask import *
+from flask_login import login_user, logout_user, login_required, login_fresh, current_user
+from .models import *
 
-app = Flask(__name__)
-app.config ['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///meetplan.sqlite3'
+main = Blueprint('main', __name__)
 
-@app.route("/oobe", methods = ['POST', 'GET'])
+@main.route("/oobe", methods = ['POST', 'GET'])
 def oobe():
-    if (request.method == 'POST'):
-        try:
-            
+    #if (request.method == 'POST'):
+        #try:
     return render_template("oobe.html")
 
-
-def dbinit():
-    from meetplan import db
-    db.init_app(app)
-
-@app.route("/", methods = ['POST', 'GET'])
+@login_required
+@main.route("/dashboard", methods = ['POST', 'GET'])
 def dashboard():
     classname = request.values.get('class')
     print(classname)
-    if classname != None:
-        return render_template("dashboard.html", name="Mitja", classes=["1b", "2b", "3a"],
-        mon=["", "DKE", "KEM", ""],
-        tue=[],
-        wed=[],
-        thu=[],
-        fri=[],
-        sat=[]
-        )
+    if classname:
+        urnik = Meetings.query.filter_by(className=classname).all()
+        if urnik:
+            return render_template("dashboard.html", name=current_user.first_name, classes=["1b", "2b", "3a"],
+                mon=["", "DKE", "KEM", ""],
+                tue=[],
+                wed=[],
+                thu=[],
+                fri=[],
+                sat=[]
+            )
+        else:
+            return render_template("dashboard.html", name=current_user.first_name, classes=["1b", "2b", "3a"],
+                mon=[],
+                tue=[],
+                wed=[],
+                thu=[],
+                fri=[],
+                sat=[]
+            )
     else:
-        return render_template("dashboard.html", name="Mitja", classes=["1b", "2b", "3a"],
+        return render_template("dashboard.html", name=current_user.first_name, classes=["1b", "2b", "3a"],
         mon=[], tue=[], wed=[], thu=[], fri=[], sat=[]
         )
