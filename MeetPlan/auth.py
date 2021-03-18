@@ -52,8 +52,13 @@ def start_post():
     first_name = request.form.get('fname')
     last_name = request.form.get('lname')
     password = request.form.get('psw')
-    admin = False
     active = True
+
+    user = User.query.all()
+    if (user):
+        role = "student"
+    else:
+        role = "admin"
 
     if email == "" or first_name == "" or last_name == "" or password == "":
         flash('Potrebno je izpolniti vsa polja!')
@@ -71,7 +76,7 @@ def start_post():
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     new_user = User(email=email, username=username, first_name=first_name, last_name=last_name,
-        password=generate_password_hash(password, method='sha256'), admin=admin, active=active)
+        password=generate_password_hash(password, method='sha256'), role=role, active=active)
 
     db.session.add(new_user)
     db.session.commit()

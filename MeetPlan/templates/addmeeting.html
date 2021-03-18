@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<script>
+function displayURL(meetingApp)
+{
+  if (meetingApp == "zoom") {
+    document.getElementById("url").innerHTML = 'https://zoom.us/j/';
+  } else if (meetingApp == "skype") {
+    document.getElementById("url").innerHTML = 'Skype URL: ';
+  } else if (meetingApp == "jitsi") {
+    document.getElementById("url").innerHTML = 'Jitsi URL: ';
+  } else if (meetingApp == "webex") {
+    document.getElementById("url").innerHTML = 'Webex URL: ';
+  } else if (meetingApp == "gmeet") {
+    document.getElementById("url").innerHTML = 'https://meet.google.com/';
+  }
+}
+</script>
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> Nadzorna plošča</b></h5>
+  </header>
+
+<div class="w3-container">
+
+    <h1>Dodajte srečanje: </h1>
+<form method="POST">
+<label for="class">Datum:</label>
+<input type="date" id="date" name="date" required></input>
+
+<br><p></p><br>
+<label for="class">Izberite razred:</label>
+<select id="class" name="class">
+{% for class in classes %}
+  <option value="{{ class.name }}">{{ class.name }}</option>
+{% endfor %}
+</select>
+
+<p></p>
+Prosimo izberite aplikacijo za videokonference:<br>
+<input type="radio" id="zoom" name="confapp" value="zoom" onclick="displayURL('zoom');" required>
+<label for="zoom">Zoom Meetings</label><br>
+<input type="radio" id="skype" name="confapp" value="skype" onclick="displayURL('skype');">
+<label for="skype">Skype</label><br>
+<input type="radio" id="jitsi" name="confapp" value="jitsi" onclick="displayURL('jitsi');">
+<label for="jitsi">Jitsi</label><br>
+<input type="radio" id="webex" name="confapp" value="webex" onclick="displayURL('webex');">
+<label for="webex">Cisco Webex</label><br>
+<input type="radio" id="gmeet" name="confapp" value="gmeet" onclick="displayURL('gmeet');">
+<label for="gmeet">Google Meet</label><br>
+<br>
+<span id="url"></span><input type="text" id="urlID" name="urlID" required>
+
+<p></p>
+<label>
+  <input type="checkbox" name="mandatory" id="mandatory">
+  Neobvezno srečanje
+</label>
+<br>
+<label>
+  <input type="checkbox" name="grading" id="grading">
+  Ocenjevanje
+</label>
+<br>
+<label>
+  <input type="checkbox" name="checking" id="checking">
+  Preverjanje znanja
+</label>
+
+<p></p>
+<label for="name" >Ime srečanja: </label>
+<input type="text" id="name" name="name" required>
+
+<p></p>
+Opis srečanja: 
+<br>
+<textarea id="desc" name="desc" rows="5" cols="30"></textarea>
+
+<br>
+<input type="submit" name="submit" value="Pošlji">
+</form>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
+{% endblock %}

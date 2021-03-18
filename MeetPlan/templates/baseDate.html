@@ -1,0 +1,235 @@
+<style>
+
+    table.coolTable td {
+        background-color:white;
+        color:black;
+    }
+    
+    table.coolTable td:hover {
+        background-color:grey;
+        color:black;
+    }
+    
+    a:link {
+      text-decoration: none;
+    }
+    
+    .main {
+      width: 100%;
+      height: 100%;
+    }
+    
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        function myClick(day, hour, clas){
+            if ("{{isTeacher}}" == "true"){
+                document.location.href = "/meeting/add";
+            // Do Whatever you want
+            }
+        }
+    </script>
+    
+    <br>
+    
+    <table class="coolTable">
+      <tr>
+        <th>Ura</th>
+        <th>Ponedeljek {{dates[0]}}</th>
+        <th>Torek {{dates[1]}}</th>
+        <th>Sreda {{dates[2]}}</th>
+        <th>Četrtek {{dates[3]}}</th>
+        <th>Petek {{dates[4]}}</th>
+        <th>Sobota {{dates[5]}}</th>
+      </tr>
+      <tr>
+        <th>0.</th>
+        <td onclick="javascript:myClick('mon', '0');">
+          {{ mon[0] }}
+        </td>
+        <td onclick="javascript:myClick('tue', '0');">
+          {{ tue[0] }}
+        </td>
+        <td onclick="javascript:myClick('wed', '0');">
+          {{ wed[0] }}
+        </td>
+        <td onclick="javascript:myClick('thu', '0');">
+          {{ thu[0] }}
+        </td>
+        <td onclick="javascript:myClick('fri', '0');">
+          {{ fri[0] }}
+        </td>
+        <td onclick="javascript:myClick('sat', '0');">
+          {{ sat[0] }}
+        </td>
+      </tr>
+      <tr>
+        <th>1.</th>
+        <td onclick="javascript:myClick('mon', '1');">
+          {{ mon[1] }}
+        </td>
+        <td onclick="javascript:myClick('tue', '1');">
+          {{ tue[1] }}
+        </td>
+        <td onclick="javascript:myClick('wed', '1');">
+          {{ wed[1] }}
+        </td>
+        <td onclick="javascript:myClick('thu', '1');">
+          {{ thu[1] }}
+        </td>
+        <td onclick="javascript:myClick('fri', '1');">
+          {{ fri[1] }}
+        </td>
+        <td onclick="javascript:myClick('sat', '1');">
+          {{ sat[1] }}
+        </td>
+      </tr>
+      <tr>
+        <th>2.</th>
+        <td onclick="javascript:myClick('mon', '2');">
+          {{ mon[2] }}
+        </td>
+        <td onclick="javascript:myClick('tue', '2');">
+          {{ tue[2] }}
+        </td>
+        <td onclick="javascript:myClick('wed', '2');">
+          {{ wed[2] }}
+        </td>
+        <td onclick="javascript:myClick('thu', '2');">
+          {{ thu[2] }}
+        </td>
+        <td onclick="javascript:myClick('fri', '2');">
+          {{ fri[2] }}
+        </td>
+        <td onclick="javascript:myClick('sat', '2');">
+          {{ sat[2] }}
+        </td>
+      </tr>
+      <tr>
+        <th>3.</th>
+        <td onclick="javascript:myClick('mon', '3');">
+          {{ mon[3] }}
+        </td>
+        <td onclick="javascript:myClick('tue', '3');">
+          {{ tue[3] }}
+        </td>
+        <td onclick="javascript:myClick('wed', '3');">
+          {{ wed[3] }}
+        </td>
+        <td onclick="javascript:myClick('thu', '3');">
+          {{ thu[3] }}
+        </td>
+        <td onclick="javascript:myClick('fri', '3');">
+          {{ fri[3] }}
+        </td>
+        <td onclick="javascript:myClick('sat', '3');">
+          {{ sat[3] }}
+        </td>
+      </tr>
+      <tr>
+        <th>4.</th>
+        <td onclick="javascript:myClick('mon', '4');">
+          {{ mon[4] }}
+        </td>
+        <td onclick="javascript:myClick('tue', '4');">
+          {{ tue[4] }}
+        </td>
+        <td onclick="javascript:myClick('wed', '4');">
+          {{ wed[4] }}
+        </td>
+        <td onclick="javascript:myClick('thu', '4');">
+          {{ thu[4] }}
+        </td>
+        <td onclick="javascript:myClick('fri', '4');">
+          {{ fri[4] }}
+        </td>
+        <td onclick="javascript:myClick('sat', '4');">
+          {{ sat[4] }}
+        </td>
+      </tr>
+      <tr>
+        <th>5.</th>
+        <td onclick="javascript:myClick('mon', '5');">
+          {{ mon[5] }}
+        </td>
+        <td onclick="javascript:myClick('tue', '5');">
+          {{ tue[5] }}
+        </td>
+        <td onclick="javascript:myClick('wed', '5');">
+          {{ wed[5] }}
+        </td>
+        <td onclick="javascript:myClick('thu', '5');">
+          {{ thu[5] }}
+        </td>
+        <td onclick="javascript:myClick('fri', '5');">
+          {{ fri[5] }}
+        </td>
+        <td onclick="javascript:myClick('sat', '5');">
+          {{ sat[5] }}
+        </td>
+      </tr>
+      <tr>
+        <th>6.</th>
+        <td onclick="javascript:myClick('mon', '6');">
+          {{ mon[6] }}
+        </td>
+        <td onclick="javascript:myClick('tue', '6');">
+          {{ tue[6] }}
+        </td>
+        <td onclick="javascript:myClick('wed', '6');">
+          {{ wed[6] }}
+        </td>
+        <td onclick="javascript:myClick('thu', '6');">
+          {{ thu[6] }}
+        </td>
+        <td onclick="javascript:myClick('fri', '6');">
+          {{ fri[6] }}
+        </td>
+        <td onclick="javascript:myClick('sat', '6');">
+          {{ sat[6] }}
+        </td>
+      </tr>
+      <tr>
+        <th>7.</th>
+        <td onclick="javascript:myClick('mon', '7');">
+          {{ mon[70] }}
+        </td>
+        <td onclick="javascript:myClick('tue', '7');">
+          {{ tue[7] }}
+        </td>
+        <td onclick="javascript:myClick('wed', '7');">
+          {{ wed[7] }}
+        </td>
+        <td onclick="javascript:myClick('thu', '7');">
+          {{ thu[7] }}
+        </td>
+        <td onclick="javascript:myClick('fri', '7');">
+          {{ fri[7] }}
+        </td>
+        <td onclick="javascript:myClick('sat', '7');">
+          {{ sat[7] }}
+        </td>
+      </tr>
+      <tr>
+        <th>8.</th>
+        <td onclick="javascript:myClick('mon', '8');">
+          {{ mon[8] }}
+        </td>
+        <td onclick="javascript:myClick('tue', '8');">
+          {{ tue[8] }}
+        </td>
+        <td onclick="javascript:myClick('wed', '8');">
+          {{ wed[8] }}
+        </td>
+        <td onclick="javascript:myClick('thu', '8');">
+          {{ thu[8] }}
+        </td>
+        <td onclick="javascript:myClick('fri', '8');">
+          {{ fri[8] }}
+        </td>
+        <td onclick="javascript:myClick('sat', '8');">
+          {{ sat[8] }}
+        </td>
+      </tr>
+    </table>
