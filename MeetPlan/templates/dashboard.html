@@ -4,29 +4,24 @@
 <!-- !PAGE CONTENT! -->
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="fa fa-dashboard"></i> Nadzorna plošča</b></h5>
+    <h5><b><i class="fa fa-dashboard"></i> {{strings["CONTROL_PANEL"]}}</b></h5>
   </header>
 
 <div class="w3-container">
 
 <form method="post">
-<label for="class">Izberite razred:</label>
+<label for="class">{{strings["PICK_A_CLASS"]}}</label>
 <select id="class" name="class">
 {% for class in classes %}
   <option value="{{ class.name }}">{{ class.name }}</option>
 {% endfor %}
 </select>
-<input type="submit" name="submit" value="Pošlji">
+<input type="submit" name="submit" value="{{strings['SEND']}}">
 </form>
 
 <br>
 
 {% include 'baseDate.html' %}
-
-<br>
-<hr>
-<br>
-<button><a href="/meeting/add">Add a meeting</a></button>
 
 <script>
 // Get the Sidebar

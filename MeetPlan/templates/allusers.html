@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> Nadzorna plošča</b></h5>
+  </header>
+
+<div class="w3-container">
+
+<h1> {{strings["USERS_PENDING"]}} </h1>
+<table>
+    {% for user in pendingusers %}
+        <tr>
+            <td> {{user.username}}</td>
+            <td> {{user.email}}</td>
+            <td> {{user.first_name}}</td>
+            <td> {{user.last_name}}</td>
+            <td> {{user.role}}</td>
+            <td><a href="/decline/{{user.id}}">{{strings["DECLINE"]}}</a></td>
+            <td><a href="/approve/{{user.id}}">{{strings["APPROVE"]}}</a></td>
+        </tr>
+    {% endfor %}
+</table>
+
+<p></p>
+
+<h1> {{strings["VERIFIED_USERS"]}} </h1>
+<table>
+    {% for user in users %}
+        <tr>
+            <td> {{user.username}}</td>
+            <td> {{user.email}}</td>
+            <td> {{user.first_name}}</td>
+            <td> {{user.last_name}}</td>
+            <td> {{user.role}}</td>
+            {% if current_user.username != user.username %}
+              <td><a href="/decline/{{user.id}}">{{strings["KICK"]}}</a></td>
+              <td><a href="/demote/{{user.id}}">{{strings["DEMOTE"]}}</a></td>
+              <td><a href="/promote/teacher/{{user.id}}">{{strings["PROMOTE_TO_TEACHER"]}}</a></td>
+              <td><a href="/promote/administrator/{{user.id}}">{{strings["PROMOTE_TO_ADMIN"]}}</a></td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+</table>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
+{% endblock %}

@@ -12,6 +12,7 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String(100))
     role = db.Column(db.String(100))
     active = db.Column(db.Boolean)
+    confirmed = db.Column(db.Boolean)
     classes = db.relationship('Classes', backref='user', lazy=True)
 
 class Classes(db.Model):
@@ -29,6 +30,13 @@ class Meetings(db.Model):
     verifying = db.Column(db.Boolean)
     description = db.Column(db.String(1000))
     meetingApp = db.Column(db.String(100))
+    link = db.Column(db.String(1000))
+    byUser = db.Column(db.String(100))
     name = db.Column(db.String(100))
     className = db.Column(db.String(100))
     class_id = db.Column(db.Integer, db.ForeignKey(Classes.id), nullable=False)
+
+class Values(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    value = db.Column(db.String(1000))

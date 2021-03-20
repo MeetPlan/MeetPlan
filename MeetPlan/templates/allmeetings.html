@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> Nadzorna plošča</b></h5>
+  </header>
+
+<div class="w3-container">
+
+<h1> {{strings["ALL_MEETINGS"]}} </h1>
+<table>
+    {% for meeting in meetings %}
+        <tr>
+            <td> {{meeting.id}}</td>
+            <td> {{meeting.name}}</td>
+            <td> {{meeting.date}}</td>
+            <td> {{meeting.hour}}</td>
+            <td> {{meeting.className}}</td>
+            <td> {{meeting.byUser}}</td>
+            <td><a href="/meeting/view/{{meeting.id}}">More</a></td>
+            <td><a href="/delete/meeting/{{meeting.id}}">Delete</a></td>
+        </tr>
+    {% endfor %}
+</table>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
+{% endblock %}

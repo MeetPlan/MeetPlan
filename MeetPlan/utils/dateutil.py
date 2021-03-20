@@ -10,9 +10,9 @@ def getStartDate(dt):
 
 def getStartDateAfter(dt, weeks):
     start = getStartDate(dt)
-    print(start)
+    #print(start)
     start = dt + timedelta(weeks=weeks)
-    print(start)
+    #print(start)
     return start
 
 def getEnd(start):
@@ -23,6 +23,6 @@ def getWeekList(dt):
     start = getStartDate(dt)
     datelist = []
     for i in range(1, 7):
-        print(i)
+        #print(i)
         datelist.append(str(start + timedelta(days=i)).split(" ")[0])
     return datelist

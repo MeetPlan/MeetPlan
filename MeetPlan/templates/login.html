@@ -72,7 +72,7 @@ span.psw {
 </head>
 <body>
 
-<h2>Login Form</h2>
+<center><h2>{{strings["LOGIN"]}}</h2></center>
 
 {% with messages = get_flashed_messages() %}
           {% if messages %}
@@ -87,17 +87,17 @@ span.psw {
 <form action="/login" method="POST">
 
   <div class="container">
-    <label for="uname"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" required>
+    <label for="uname"><b>{{strings["USERNAME"]}}</b></label>
+    <input type="text" placeholder="{{strings['ENTER_USERNAME']}}" name="uname" required>
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
+    <label for="psw"><b>{{strings["PASSWORD"]}}</b></label>
+    <input type="password" placeholder="{{strings['ENTER_PASSWORD']}}" name="psw" required>
         
-    <button type="submit">Login</button>
+    <button type="submit">{{strings['LOGIN']}}</button>
   </div>
 
   <div class="container" style="background-color:#f1f1f1">
-  <a href="/start">Register</a>
+  <a href="/start">{{strings["REGISTER"]}}</a>
   </div>
 </form>
 

@@ -72,7 +72,7 @@ span.psw {
 </head>
 <body>
 
-<h2>Login Form</h2>
+  <center><h2>{{strings["LOGIN"]}}</h2></center>
 
 {% with messages = get_flashed_messages() %}
           {% if messages %}
@@ -87,26 +87,26 @@ span.psw {
 <form action="/start" method="POST">
 
   <div class="container">
-    <label for="uname"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" required>
+    <label for="uname"><b>{{strings['USERNAME']}}</b></label>
+    <input type="text" placeholder="{{strings['ENTER_USERNAME']}}" name="uname" required>
 
-    <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
+    <label for="psw"><b>{{strings['PASSWORD']}}</b></label>
+    <input type="password" placeholder="{{strings['ENTER_PASSWORD']}}" name="psw" required>
 	
-	<label for="fname"><b>First name</b></label>
-    <input type="text" placeholder="Enter First name" name="fname" required>
+	<label for="fname"><b>{{strings['FIRST_NAME']}}</b></label>
+    <input type="text" placeholder="{{strings['ENTER_FIRST_NAME']}}" name="fname" required>
 	
-	<label for="lname"><b>Last name</b></label>
-    <input type="text" placeholder="Enter Last name" name="lname" required>
+	<label for="lname"><b>{{strings['LAST_NAME']}}</b></label>
+    <input type="text" placeholder="{{strings['ENTER_LAST_NAME']}}" name="lname" required>
 	
-	<label for="email"><b>Email</b></label>
-    <input type="email" placeholder="Enter E-mail" name="email" required>
+	<label for="email"><b>{{strings['EMAIL']}}</b></label>
+    <input type="email" placeholder="{{strings['ENTER_EMAIL']}}" name="email" required>
         
-    <button type="submit">Login</button>
+    <button type="submit">{{strings['REGISTER']}}</button>
   </div>
 
   <div class="container" style="background-color:#f1f1f1">
-  <a href="/start">Register</a>
+  <a href="/login">{{strings['LOGIN']}}</a>
   </div>
 </form>
 

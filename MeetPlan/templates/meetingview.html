@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<style>
+.yes {
+    background-color: greenyellow;
+}
+
+.no {
+    background-color: red;
+}
+</style>
+
+<h1> {{strings['MEETING_DETAILS']}} </h1>
+<p></p>
+<table>
+    <tr>
+        <th>{{strings['MEETING_NAME']}}</th>
+        <td>{{ meeting.name }}</td>
+    </tr>
+    <tr>
+        <th>{{strings['MEETING_DESCRIPTION']}}</th>
+        <td><pre>{{ meeting.description }}</pre></td>
+    </tr>
+    <tr>
+        <th>{{strings['GRADING']}}</th>
+        {% if meeting.grading == True %}
+            <td class="yes">{{strings['YES']}}</td>
+        {% endif %}
+        {% if meeting.grading == False %}
+            <td class="no">{{strings['NO']}}</td>
+        {% endif %}
+    </tr>
+    <tr>
+        <th>{{strings['KNOWLEDGE_CHECKING']}}</th>
+        {% if meeting.verifying == True %}
+            <td class="yes">{{strings['YES']}}</td>
+        {% endif %}
+        {% if meeting.verifying == False %}
+            <td class="no">{{strings['NO']}}</td>
+        {% endif %}
+    </tr>
+    <tr>
+        <th>{{strings['NOT_MANDATORY']}}</th>
+        {% if meeting.required == True %}
+            <td class="yes">{{strings['YES']}}</td>
+        {% endif %}
+        {% if meeting.required == False %}
+            <td class="no">{{strings['NO']}}</td>
+        {% endif %}
+    </tr>
+    <tr>
+        <th>{{strings['MEETING_APP']}}</th>
+        {% if meeting.meetingApp == "zoom" %}
+            <td>Zoom</td>
+        {% endif %}
+        {% if meeting.meetingApp == "gmeet" %}
+            <td>Google Meet</td>
+        {% endif %}
+        {% if meeting.meetingApp == "webex" %}
+            <td>Cisco Webex</td>
+        {% endif %}
+        {% if meeting.meetingApp == "skype" %}
+            <td>Skype</td>
+        {% endif %}
+        {% if meeting.meetingApp == "jitsi" %}
+            <td>Jitsi</td>
+        {% endif %}
+    </tr>
+    <tr>
+        <th>{{strings['CLASS']}}</th>
+        <td>{{ meeting.className }}</td>
+    </tr>
+    <tr>
+        <th>{{strings['LINK']}}</th>
+        <td><a href="{{ meeting.link }}">{{strings['CLICK_HERE_FOR_JOIN']}}</a></td>
+    </tr>
+  </table>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% extends "errorBase.html" %}
+
+{% block errorname %} {{strings["FORBIDDEN"]}} {% endblock %}
+{% block errorcode %} 403 {% endblock %}
+{% block errordescription %} {{strings["NO_ACCESS"]}} {% endblock %}

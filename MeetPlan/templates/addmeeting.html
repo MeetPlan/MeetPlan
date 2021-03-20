@@ -20,18 +20,19 @@ function displayURL(meetingApp)
 </script>
   <!-- Header -->
   <header class="w3-container" style="padding-top:22px">
-    <h5><b><i class="fa fa-dashboard"></i> Nadzorna plošča</b></h5>
+    <h5><b><i class="fa fa-dashboard"></i> {{strings['CONTROL_PANEL']}}</b></h5>
   </header>
 
 <div class="w3-container">
 
-    <h1>Dodajte srečanje: </h1>
+<h1>{{strings['ADD_A_MEETING']}}</h1>
+
 <form method="POST">
-<label for="class">Datum:</label>
+<label for="class">{{strings['DATE']}}</label>
 <input type="date" id="date" name="date" required></input>
 
 <br><p></p><br>
-<label for="class">Izberite razred:</label>
+<label for="class">{{strings['PICK_A_CLASS']}}</label>
 <select id="class" name="class">
 {% for class in classes %}
   <option value="{{ class.name }}">{{ class.name }}</option>
@@ -39,7 +40,21 @@ function displayURL(meetingApp)
 </select>
 
 <p></p>
-Prosimo izberite aplikacijo za videokonference:<br>
+<label for="hour">{{strings['PICK_A_HOUR']}}</label>
+<select id="hour" name="hour">
+  <option value="0">0.</option>
+  <option value="1">1.</option>
+  <option value="2">2.</option>
+  <option value="3">3.</option>
+  <option value="4">4.</option>
+  <option value="5">5.</option>
+  <option value="6">6.</option>
+  <option value="7">7.</option>
+  <option value="8">8.</option>
+</select>
+
+<p></p>
+{{strings['PICK_A_CONF_APP']}}<br>
 <input type="radio" id="zoom" name="confapp" value="zoom" onclick="displayURL('zoom');" required>
 <label for="zoom">Zoom Meetings</label><br>
 <input type="radio" id="skype" name="confapp" value="skype" onclick="displayURL('skype');">
@@ -56,30 +71,30 @@ Prosimo izberite aplikacijo za videokonference:<br>
 <p></p>
 <label>
   <input type="checkbox" name="mandatory" id="mandatory">
-  Neobvezno srečanje
+  {{strings['NOT_MANDATORY']}}
 </label>
 <br>
 <label>
   <input type="checkbox" name="grading" id="grading">
-  Ocenjevanje
+  {{strings['GRADING']}}
 </label>
 <br>
 <label>
   <input type="checkbox" name="checking" id="checking">
-  Preverjanje znanja
+  {{strings['KNOWLEDGE_CHECKING']}}
 </label>
 
 <p></p>
-<label for="name" >Ime srečanja: </label>
+<label for="name" >{{strings['MEETING_NAME']}}</label>
 <input type="text" id="name" name="name" required>
 
 <p></p>
-Opis srečanja: 
+{{strings['MEETING_DESCRIPTION']}}
 <br>
 <textarea id="desc" name="desc" rows="5" cols="30"></textarea>
 
 <br>
-<input type="submit" name="submit" value="Pošlji">
+<input type="submit" name="submit" value="{{strings['SEND']}}">
 </form>
 
 <script>

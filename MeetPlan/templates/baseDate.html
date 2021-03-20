@@ -23,10 +23,15 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-        function myClick(day, hour, clas){
+        function myClick(id){
             if ("{{isTeacher}}" == "true"){
+              if (id == "") {
                 document.location.href = "/meeting/add";
-            // Do Whatever you want
+              } else {
+                document.location.href = "/meeting/view/"+id;
+              }
+            } else {
+              document.location.href = "/meeting/view/"+id;
             }
         }
     </script>
@@ -36,200 +41,200 @@
     <table class="coolTable">
       <tr>
         <th>Ura</th>
-        <th>Ponedeljek {{dates[0]}}</th>
-        <th>Torek {{dates[1]}}</th>
-        <th>Sreda {{dates[2]}}</th>
-        <th>Četrtek {{dates[3]}}</th>
-        <th>Petek {{dates[4]}}</th>
-        <th>Sobota {{dates[5]}}</th>
+        <th>{{strings["MONDAY"]}} {{dates[0]}}</th>
+        <th>{{strings["TUESDAY"]}} {{dates[1]}}</th>
+        <th>{{strings["WEDNESDAY"]}} {{dates[2]}}</th>
+        <th>{{strings["THURSDAY"]}} {{dates[3]}}</th>
+        <th>{{strings["FRIDAY"]}} {{dates[4]}}</th>
+        <th>{{strings["SATURDAY"]}} {{dates[5]}}</th>
       </tr>
       <tr>
         <th>0.</th>
-        <td onclick="javascript:myClick('mon', '0');">
-          {{ mon[0] }}
+        <td onclick="javascript:myClick('{{mon[0].id}}');">
+          {{ mon[0].name }}
         </td>
-        <td onclick="javascript:myClick('tue', '0');">
-          {{ tue[0] }}
+        <td onclick="javascript:myClick('{{tue[0].id}}');">
+          {{ tue[0].name }}
         </td>
-        <td onclick="javascript:myClick('wed', '0');">
-          {{ wed[0] }}
+        <td onclick="javascript:myClick('{{wed[0].id}}');">
+          {{ wed[0].name }}
         </td>
-        <td onclick="javascript:myClick('thu', '0');">
-          {{ thu[0] }}
+        <td onclick="javascript:myClick('{{thu[0].id}}');">
+          {{ thu[0].name }}
         </td>
-        <td onclick="javascript:myClick('fri', '0');">
-          {{ fri[0] }}
+        <td onclick="javascript:myClick('{{fri[0].id}}');">
+          {{ fri[0].name }}
         </td>
-        <td onclick="javascript:myClick('sat', '0');">
-          {{ sat[0] }}
+        <td onclick="javascript:myClick('{{sat[0].id}}');">
+          {{ sat[0].name }}
         </td>
       </tr>
       <tr>
         <th>1.</th>
-        <td onclick="javascript:myClick('mon', '1');">
-          {{ mon[1] }}
+        <td onclick="javascript:myClick('{{mon[1].id}}');">
+          {{ mon[1].name }}
         </td>
-        <td onclick="javascript:myClick('tue', '1');">
-          {{ tue[1] }}
+        <td onclick="javascript:myClick('{{tue[1].id}}');">
+          {{ tue[1].name }}
         </td>
-        <td onclick="javascript:myClick('wed', '1');">
-          {{ wed[1] }}
+        <td onclick="javascript:myClick('{{wed[1].id}}');">
+          {{ wed[1].name }}
         </td>
-        <td onclick="javascript:myClick('thu', '1');">
-          {{ thu[1] }}
+        <td onclick="javascript:myClick('{{thu[1].id}}');">
+          {{ thu[1].name }}
         </td>
-        <td onclick="javascript:myClick('fri', '1');">
-          {{ fri[1] }}
+        <td onclick="javascript:myClick('{{fri[1].id}}');">
+          {{ fri[1].name }}
         </td>
-        <td onclick="javascript:myClick('sat', '1');">
-          {{ sat[1] }}
+        <td onclick="javascript:myClick('{{sat[1].id}}');">
+          {{ sat[1].name }}
         </td>
       </tr>
       <tr>
         <th>2.</th>
-        <td onclick="javascript:myClick('mon', '2');">
-          {{ mon[2] }}
+        <td onclick="javascript:myClick('{{mon[2].id}}');">
+          {{ mon[2].name }}
         </td>
-        <td onclick="javascript:myClick('tue', '2');">
-          {{ tue[2] }}
+        <td onclick="javascript:myClick('{{tue[2].id}}');">
+          {{ tue[2].name }}
         </td>
-        <td onclick="javascript:myClick('wed', '2');">
-          {{ wed[2] }}
+        <td onclick="javascript:myClick('{{wed[2].id}}');">
+          {{ wed[2].name }}
         </td>
-        <td onclick="javascript:myClick('thu', '2');">
-          {{ thu[2] }}
+        <td onclick="javascript:myClick('{{thu[2].id}}');">
+          {{ thu[2].name }}
         </td>
-        <td onclick="javascript:myClick('fri', '2');">
-          {{ fri[2] }}
+        <td onclick="javascript:myClick('{{fri[2].id}}');">
+          {{ fri[2].name }}
         </td>
-        <td onclick="javascript:myClick('sat', '2');">
-          {{ sat[2] }}
+        <td onclick="javascript:myClick('{{sat[2].id}}');">
+          {{ sat[2].name }}
         </td>
       </tr>
       <tr>
         <th>3.</th>
-        <td onclick="javascript:myClick('mon', '3');">
-          {{ mon[3] }}
+        <td onclick="javascript:myClick('{{mon[3].id}}');">
+          {{ mon[3].name }}
         </td>
-        <td onclick="javascript:myClick('tue', '3');">
-          {{ tue[3] }}
+        <td onclick="javascript:myClick('{{tue[3].id}}');">
+          {{ tue[3].name }}
         </td>
-        <td onclick="javascript:myClick('wed', '3');">
-          {{ wed[3] }}
+        <td onclick="javascript:myClick('{{wed[3].id}}');">
+          {{ wed[3].name }}
         </td>
-        <td onclick="javascript:myClick('thu', '3');">
-          {{ thu[3] }}
+        <td onclick="javascript:myClick('{{thu[3].id}}');">
+          {{ thu[3].name }}
         </td>
-        <td onclick="javascript:myClick('fri', '3');">
-          {{ fri[3] }}
+        <td onclick="javascript:myClick('{{fri[3].id}}');">
+          {{ fri[3].name }}
         </td>
-        <td onclick="javascript:myClick('sat', '3');">
-          {{ sat[3] }}
+        <td onclick="javascript:myClick('{{sat[3].id}}');">
+          {{ sat[3].name }}
         </td>
       </tr>
       <tr>
         <th>4.</th>
-        <td onclick="javascript:myClick('mon', '4');">
-          {{ mon[4] }}
+        <td onclick="javascript:myClick('{{mon[4].id}}');">
+          {{ mon[4].name }}
         </td>
-        <td onclick="javascript:myClick('tue', '4');">
-          {{ tue[4] }}
+        <td onclick="javascript:myClick('{{tue[4].id}}');">
+          {{ tue[4].name }}
         </td>
-        <td onclick="javascript:myClick('wed', '4');">
-          {{ wed[4] }}
+        <td onclick="javascript:myClick('{{wed[4].id}}');">
+          {{ wed[4].name }}
         </td>
-        <td onclick="javascript:myClick('thu', '4');">
-          {{ thu[4] }}
+        <td onclick="javascript:myClick('{{thu[4].id}}');">
+          {{ thu[4].name }}
         </td>
-        <td onclick="javascript:myClick('fri', '4');">
-          {{ fri[4] }}
+        <td onclick="javascript:myClick('{{fri[4].id}}');">
+          {{ fri[4].name }}
         </td>
-        <td onclick="javascript:myClick('sat', '4');">
-          {{ sat[4] }}
+        <td onclick="javascript:myClick('{{sat[4].id}}');">
+          {{ sat[4].name }}
         </td>
       </tr>
       <tr>
         <th>5.</th>
-        <td onclick="javascript:myClick('mon', '5');">
-          {{ mon[5] }}
+        <td onclick="javascript:myClick('{{mon[5].id}}');">
+          {{ mon[5].name }}
         </td>
-        <td onclick="javascript:myClick('tue', '5');">
-          {{ tue[5] }}
+        <td onclick="javascript:myClick('{{tue[5].id}}');">
+          {{ tue[5].name }}
         </td>
-        <td onclick="javascript:myClick('wed', '5');">
-          {{ wed[5] }}
+        <td onclick="javascript:myClick('{{wed[5].id}}');">
+          {{ wed[5].name }}
         </td>
-        <td onclick="javascript:myClick('thu', '5');">
-          {{ thu[5] }}
+        <td onclick="javascript:myClick('{{thu[5].id}}');">
+          {{ thu[5].name }}
         </td>
-        <td onclick="javascript:myClick('fri', '5');">
-          {{ fri[5] }}
+        <td onclick="javascript:myClick('{{fri[5].id}}');">
+          {{ fri[5].name }}
         </td>
-        <td onclick="javascript:myClick('sat', '5');">
-          {{ sat[5] }}
+        <td onclick="javascript:myClick('{{sat[5].id}}');">
+          {{ sat[5].name }}
         </td>
       </tr>
       <tr>
         <th>6.</th>
-        <td onclick="javascript:myClick('mon', '6');">
-          {{ mon[6] }}
+        <td onclick="javascript:myClick('{{mon[6].id}}');">
+          {{ mon[6].name }}
         </td>
-        <td onclick="javascript:myClick('tue', '6');">
-          {{ tue[6] }}
+        <td onclick="javascript:myClick('{{tue[6].id}}');">
+          {{ tue[6].name }}
         </td>
-        <td onclick="javascript:myClick('wed', '6');">
-          {{ wed[6] }}
+        <td onclick="javascript:myClick('{{wed[6].id}}');">
+          {{ wed[6].name }}
         </td>
-        <td onclick="javascript:myClick('thu', '6');">
-          {{ thu[6] }}
+        <td onclick="javascript:myClick('{{thu[6].id}}');">
+          {{ thu[6].name }}
         </td>
-        <td onclick="javascript:myClick('fri', '6');">
-          {{ fri[6] }}
+        <td onclick="javascript:myClick('{{fri[6].id}}');">
+          {{ fri[6].name }}
         </td>
-        <td onclick="javascript:myClick('sat', '6');">
-          {{ sat[6] }}
+        <td onclick="javascript:myClick('{{sat[6].id}}');">
+          {{ sat[6].name }}
         </td>
       </tr>
       <tr>
         <th>7.</th>
-        <td onclick="javascript:myClick('mon', '7');">
-          {{ mon[70] }}
+        <td onclick="javascript:myClick('{{mon[7].id}}');">
+          {{ mon[7].name }}
         </td>
-        <td onclick="javascript:myClick('tue', '7');">
-          {{ tue[7] }}
+        <td onclick="javascript:myClick('{{tue[7].id}}');">
+          {{ tue[7].name }}
         </td>
-        <td onclick="javascript:myClick('wed', '7');">
-          {{ wed[7] }}
+        <td onclick="javascript:myClick('{{wed[7].id}}');">
+          {{ wed[7].name }}
         </td>
-        <td onclick="javascript:myClick('thu', '7');">
-          {{ thu[7] }}
+        <td onclick="javascript:myClick('{{thu[7].id}}');">
+          {{ thu[7].name }}
         </td>
-        <td onclick="javascript:myClick('fri', '7');">
-          {{ fri[7] }}
+        <td onclick="javascript:myClick('{{fri[7].id}}');">
+          {{ fri[7].name }}
         </td>
-        <td onclick="javascript:myClick('sat', '7');">
-          {{ sat[7] }}
+        <td onclick="javascript:myClick('{{sat[7].id}}');">
+          {{ sat[7].name }}
         </td>
       </tr>
       <tr>
         <th>8.</th>
-        <td onclick="javascript:myClick('mon', '8');">
-          {{ mon[8] }}
+        <td onclick="javascript:myClick('{{mon[8].id}}');">
+          {{ mon[8].name }}
         </td>
-        <td onclick="javascript:myClick('tue', '8');">
-          {{ tue[8] }}
+        <td onclick="javascript:myClick('{{tue[8].id}}');">
+          {{ tue[8].name }}
         </td>
-        <td onclick="javascript:myClick('wed', '8');">
-          {{ wed[8] }}
+        <td onclick="javascript:myClick('{{wed[8].id}}');">
+          {{ wed[8].name }}
         </td>
-        <td onclick="javascript:myClick('thu', '8');">
-          {{ thu[8] }}
+        <td onclick="javascript:myClick('{{thu[8].id}}');">
+          {{ thu[8].name }}
         </td>
-        <td onclick="javascript:myClick('fri', '8');">
-          {{ fri[8] }}
+        <td onclick="javascript:myClick('{{fri[8].id}}');">
+          {{ fri[8].name }}
         </td>
-        <td onclick="javascript:myClick('sat', '8');">
-          {{ sat[8] }}
+        <td onclick="javascript:myClick('{{sat[8].id}}');">
+          {{ sat[8].name }}
         </td>
       </tr>
     </table>

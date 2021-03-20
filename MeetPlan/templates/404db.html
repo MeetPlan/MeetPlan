@@ -1,0 +1,5 @@
+{% extends "errorBase.html" %}
+
+{% block errorname %} {{strings["NOT_FOUND"]}} {% endblock %}
+{% block errorcode %} 404 {% endblock %}
+{% block errordescription %} {{strings["NOT_FOUND_DB"]}} {% endblock %}

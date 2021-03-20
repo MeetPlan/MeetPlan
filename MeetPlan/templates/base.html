@@ -1,13 +1,17 @@
 <!DOCTYPE html>
-<html>
-<title>W3.CSS Template</title>
+<html lang="sl-SI">
+<title>MeetPlan</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+
+.en-US, .sl-SI { display:none; } /* hide all elements with a language class */
+.en-US:lang(en-US), .sl-SI:lang(sl-SI) { display:block; } /* show those elements that match their language class */
 
 tr, td {
   width: 150px;
@@ -29,23 +33,26 @@ tr, td {
       <img src="https://w3schools.com/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
     </div>
     <div class="w3-col s8 w3-bar">
-      <span>Pozdravljeni, <strong>{{name}}</strong></span><br>
+      <span id="hello">{{strings["HELLO"]}}<strong>{{name}}</strong></span><br>
+      <a href="/logout" class="w3-bar-item w3-button"><i class="fa fa-sign-out"></i></a>
     </div>
   </div>
   <hr>
   <div class="w3-container">
-    <h5>Nadzorna plošča</h5>
+    <h5>{{strings["DASHBOARD"]}}</h5>
   </div>
   <div class="w3-bar-block">
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
-    <a href="{{ url_for('main.dashboard') }}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Pregled</a>
+    <a href="{{ url_for('main.dashboard') }}" class="w3-bar-item w3-button w3-padding"><i id="overview" class="fa fa-users fa-fw"></i>  {{strings["OVERVIEW"]}}</a>
     {% if role=="admin" %}
-      <a href="{{ url_for('main.addClass') }}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Dodaj razred</a>
+      <a href="{{ url_for('main.addClass') }}" class="w3-bar-item w3-button w3-padding"><i id="addclass" class="fa fa-users fa-fw"></i>  {{strings["ADD_CLASS"]}}</a>
+      <a href="{{ url_for('main.allUsers') }}" class="w3-bar-item w3-button w3-padding"><i id="allusers" class="fa fa-users fa-fw"></i>  {{strings["ALL_USERS"]}}</a>
+      <a href="{{ url_for('main.allMeetings') }}" class="w3-bar-item w3-button w3-padding"><i id="allmeetings" class="fa fa-users fa-fw"></i>  {{strings["ALL_MEETINGS"]}}</a>
     {% endif %}
     {% if role=="admin" or role=="teacher" %}
       <!--<a href="{{ url_for('main.meetingPicker') }}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Dodaj srečanje</a>-->
     {% endif %}
-    <a href="{{ url_for('main.settings')}}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-cog fa-fw"></i>  Nastavitve</a><br><br>
+    <a href="{{ url_for('main.settings')}}" class="w3-bar-item w3-button w3-padding"><i id="settings" class="fa fa-cog fa-fw"></i>  {{strings["SETTINGS"]}}</a><br><br>
   </div>
 </nav>
 <!-- Overlay effect when opening sidebar on small screens -->
@@ -56,7 +63,7 @@ tr, td {
   {% if messages %}
       {% for message in messages %}
       <div class="w3-red">
-        Opozorilo: {{ message }}
+        {{strings["WARNING"]}} {{ message }}
       </div>
       {% endfor %}
   {% endif %}

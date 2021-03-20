@@ -5,6 +5,7 @@ from .models import User
 from time import time
 from random import random, choice
 from . import db
+from .main import getStrings, getLang
 import requests
 import os
 import string
@@ -14,10 +15,16 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login')
 def login():
-    return render_template('login.html')
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
+    return render_template('login.html', strings=strings)
 
 @auth.route('/login', methods=['POST'])
 def login_post():
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
     email = request.form.get('uname')
     password = request.form.get('psw')
 
@@ -26,27 +33,38 @@ def login_post():
         print("[login-system] User didn't use e-mail login. Trying to login with username")
         user = User.query.filter_by(username=email).first()
         if not user:
-            flash('Please check your login details and try again.')
+            flash(strings["USER_NOT_EXISTS"])
             return redirect(url_for('auth.login'))
 
     print("[login-system] User used e-mail login")
 
-    # check if user actually exists
-    # take the user supplied password, hash it, and compare it to the hashed password in database
-    if not check_password_hash(user.password, password):
-        flash('Wrong password! Please try again!')
-        return redirect(url_for('auth.login')) # if user doesn't exist or password is wrong, reload the page
+    if user.confirmed == True or user.role == "admin":
 
-    # if the above check passes, then we know the user has the right credentials
-    login_user(user)
-    return redirect(url_for('main.dashboard'))
+        # check if user actually exists
+        # take the user supplied password, hash it, and compare it to the hashed password in database
+        if not check_password_hash(user.password, password):
+            flash(strings["WRONG_PASS"])
+            return redirect(url_for('auth.login')) # if user doesn't exist or password is wrong, reload the page
+
+        # if the above check passes, then we know the user has the right credentials
+        login_user(user)
+        return redirect(url_for('main.dashboard'))
+    else:
+        flash(strings["PENDING_VERIFICATION"])
+        return redirect(url_for("auth.login"))
 
 @auth.route('/start')
 def start():
-    return render_template('start.html')
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
+    return render_template('start.html', strings=strings)
 
 @auth.route('/start', methods=['POST'])
 def start_post():
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
     email = request.form.get('email')
     username = request.form.get('uname')
     first_name = request.form.get('fname')
@@ -60,23 +78,28 @@ def start_post():
     else:
         role = "admin"
 
+    if (role == "admin"):
+        confirmed = True
+    else:
+        confirmed = False
+
     if email == "" or first_name == "" or last_name == "" or password == "":
-        flash('Potrebno je izpolniti vsa polja!')
+        flash(strings["ALL_FIELDS"])
         return redirect(url_for('auth.start'))
 
     user = User.query.filter_by(email=email).first()
     usernme = User.query.filter_by(username=username).first() # if this returns a user, then the email already exists in database
 
     if user: # if a user is found, we want to redirect back to signup page so user can try again
-        flash('Uporabnik_ca s tem elekronskim naslovom že obstaja.')
+        flash(strings["USER_EMAIL_EXISTS"])
         return redirect(url_for('auth.start'))
     elif usernme: # if a user is found, we want to redirect back to signup page so user can try again
-        flash('Uporabnik_ca s tem uporabniškim imenom že obstaja.')
+        flash(strings["USER_USERNAME_EXISTS"])
         return redirect(url_for('auth.start'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     new_user = User(email=email, username=username, first_name=first_name, last_name=last_name,
-        password=generate_password_hash(password, method='sha256'), role=role, active=active)
+        password=generate_password_hash(password, method='sha256'), role=role, active=active, confirmed=confirmed)
 
     db.session.add(new_user)
     db.session.commit()
@@ -87,8 +110,9 @@ def start_post():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('auth.login'))
 
+"""
 @auth.route('/profile', methods=['POST'])
 def profile_update():
     email = request.form.get('email')
@@ -126,4 +150,4 @@ def profile_update():
         user.password = generate_password_hash(new_password, method='sha256')
     db.session.commit()
 
-    return redirect(url_for('main.profile'))
+    return redirect(url_for('main.profile'))"""

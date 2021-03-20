@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> Nadzorna plošča</b></h5>
+  </header>
+
+<div class="w3-container">
+
+    <h1>{{strings['SETTINGS']}}: </h1>
+<form method="POST">
+<p></p>
+{{strings['PICK_A_LANG']}}<br>
+<input type="radio" id="en-US" name="lang" value="en-US" required>
+<label for="en-US">English (USA) &nbsp; <img src="https://www.sciencekids.co.nz/images/pictures/flags680/United_States.jpg" height=20></label><br>
+<input type="radio" id="sl-SI" name="lang" value="sl-SI">
+<label for="sl-SI">slovenščina (Slovenija) &nbsp; <img src="https://www.sciencekids.co.nz/images/pictures/flags680/Slovenia.jpg" height=20></label><br>
+
+<br>
+<input type="submit" name="submit" value="{{strings['SEND']}}">
+</form>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+
+{% endblock %}
