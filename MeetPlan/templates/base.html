@@ -3,9 +3,9 @@
 <title>MeetPlan</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/w3css/w3.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='fonts/Raleway.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome5/css/all.css') }}">
 
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
@@ -30,11 +30,11 @@ tr, td {
 <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:4;width:300px;" id="mySidebar"><br>
   <div class="w3-container w3-row">
     <div class="w3-col s4">
-      <img src="https://w3schools.com/w3images/avatar2.png" class="w3-circle w3-margin-right" style="width:46px">
+      <img src="{{ url_for('static', filename='img/avatar-male.png') }}" class="w3-circle w3-margin-right" style="width:46px">
     </div>
     <div class="w3-col s8 w3-bar">
       <span id="hello">{{strings["HELLO"]}}<strong>{{name}}</strong></span><br>
-      <a href="/logout" class="w3-bar-item w3-button"><i class="fa fa-sign-out"></i></a>
+      <a href="/logout" class="w3-bar-item w3-button"><i class="fa fa-sign-out-alt"></i></a>
     </div>
   </div>
   <hr>
@@ -45,9 +45,9 @@ tr, td {
     <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
     <a href="{{ url_for('main.dashboard') }}" class="w3-bar-item w3-button w3-padding"><i id="overview" class="fa fa-users fa-fw"></i>  {{strings["OVERVIEW"]}}</a>
     {% if role=="admin" %}
-      <a href="{{ url_for('main.addClass') }}" class="w3-bar-item w3-button w3-padding"><i id="addclass" class="fa fa-users fa-fw"></i>  {{strings["ADD_CLASS"]}}</a>
-      <a href="{{ url_for('main.allUsers') }}" class="w3-bar-item w3-button w3-padding"><i id="allusers" class="fa fa-users fa-fw"></i>  {{strings["ALL_USERS"]}}</a>
-      <a href="{{ url_for('main.allMeetings') }}" class="w3-bar-item w3-button w3-padding"><i id="allmeetings" class="fa fa-users fa-fw"></i>  {{strings["ALL_MEETINGS"]}}</a>
+      <a href="{{ url_for('main.addClass') }}" class="w3-bar-item w3-button w3-padding"><i id="addclass" class="fa fa-school fa-fw"></i>  {{strings["ADD_CLASS"]}}</a>
+      <a href="{{ url_for('main.allUsers') }}" class="w3-bar-item w3-button w3-padding"><i id="allusers" class="fa fa-users-cog fa-fw"></i>  {{strings["ALL_USERS"]}}</a>
+      <a href="{{ url_for('main.allMeetings') }}" class="w3-bar-item w3-button w3-padding"><i id="allmeetings" class="fa fa-chalkboard-teacher fa-fw"></i>  {{strings["ALL_MEETINGS"]}}</a>
     {% endif %}
     {% if role=="admin" or role=="teacher" %}
       <!--<a href="{{ url_for('main.meetingPicker') }}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Dodaj srečanje</a>-->
@@ -68,5 +68,11 @@ tr, td {
       {% endfor %}
   {% endif %}
 {% endwith %}
+
+<!-- Header -->
+<header class="w3-container" style="padding-top:22px">
+  <h5><b><i class="fa fa-dashboard"></i> {{strings["CONTROL_PANEL"]}}</b></h5>
+</header>
+
 {% block body %}{% endblock %}
 </div>

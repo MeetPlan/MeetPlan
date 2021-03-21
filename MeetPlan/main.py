@@ -62,7 +62,7 @@ def dashboard():
             strings = strings
         )
     else:
-        flash("Prosimo, izberite razred")
+        flash(strings["SELECT_CLASS"])
 
         return render_template("dashboard.html",
             name=current_user.first_name,

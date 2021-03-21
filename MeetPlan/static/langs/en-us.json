@@ -26,7 +26,7 @@
     "KNOWLEDGE_CHECKING": "Test of knowledge before grading",
     "MEETING_NAME": "Meeting name: ",
     "MEETING_DESCRIPTION": "Meeting description: ",
-    "PICK_A_LANG": "Please, pick a language: ",
+    "PICK_A_LANG": "Please, pick a language",
     "MEETING_APP": "Meeting app: ",
     "CLASS": "Class: ",
     "LINK": "Link: ",
@@ -63,5 +63,7 @@
     "FORBIDDEN": "Forbidden",
     "NO_ACCESS": "You don't have access to see this page",
     "NOT_FOUND": "Not found",
-    "NOT_FOUND_DB": "Not found in database"
+    "NOT_FOUND_DB": "Not found in database",
+    "ADD_A_CLASS": "Add a class",
+    "ALL_CLASSES": "All classes: "
 }
