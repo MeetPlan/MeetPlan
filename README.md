@@ -22,3 +22,11 @@ Translations are held in `MeetPlan/static/langs` folder. You can translate them 
 
 ## Meetings:
 ![Meetings](https://github.com/mytja/MeetPlan/blob/main/MeetPlan/screenshots/meetings.PNG)
+
+# Special thanks to:
+- [FontAwesome](https://fontawesome.com/) for their amazing library with icons
+- [W3schools](https://w3schools.com/) for their amazing W3.CSS library
+- [Flask](https://flask.palletsprojects.com/en/1.1.x/) for Flask
+- [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/) for Flask-SQLAlchemy
+- [Flask-Login](https://flask-login.readthedocs.io/en/latest/) for Flask-Login
+- [SQLAlchemy](https://www.sqlalchemy.org/) for SQLAlchemy
