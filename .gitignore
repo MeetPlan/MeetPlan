@@ -5,3 +5,5 @@ __pycache__/
 
 Thumbs.db
 *.zip
+
+.vscode/

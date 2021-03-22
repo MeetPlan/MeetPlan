@@ -29,6 +29,10 @@ def create_app():
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
 
+    # blueprint for auth routes in our app
+    from .api import api as api_blueprint
+    app.register_blueprint(api_blueprint)
+
     # blueprint for non-auth parts of app
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
