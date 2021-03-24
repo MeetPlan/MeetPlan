@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="w3-container">
+
+<h3>{{strings["NAME"]}}</h3>
+{{release["name"]}}
+
+<h3>{{strings["DESCRIPTION"]}}</h3>
+{{release["body"]}}
+
+<br><p></p><br>
+<form action="/update" method="POST">
+    <button type="submit" name="your_name" value="your_value" class="btn-link">{{strings["UPDATE"]}}</button>
+</form>
+
+<br>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>
+{% endblock %}

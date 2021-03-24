@@ -65,5 +65,10 @@
     "NOT_FOUND": "Not found",
     "NOT_FOUND_DB": "Not found in database",
     "ADD_A_CLASS": "Add a class",
-    "ALL_CLASSES": "All classes: "
+    "ALL_CLASSES": "All classes: ",
+    "OTA": "Over-the-air Update",
+    "UPDATE": "Update",
+    "NAME": "Release name",
+    "DESCRIPTION": "Description: ",
+    "UP_TO_DATE": "Already up to date."
 }
