@@ -33,8 +33,9 @@ def updatePost():
         if (output == b'Already up to date.\n'):
             flash(strings["UP_TO_DATE"])
             return redirect(url_for("ota.update"))
-        else:
-            return output
+        elif ("Updating" in output):
+            flash("Updated successfully")
+            return redirect(url_for("ota.update"))
         #return render_template("ota.html", release=r.json()[0], strings=strings)
     else:
         abort(403)

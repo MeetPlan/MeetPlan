@@ -24,11 +24,11 @@ function displayURL(meetingApp)
 
 <form method="POST">
 <label for="class">{{strings['DATE']}}</label>
-<input type="date" id="date" name="date" required></input>
+<input type="date" id="date" name="date" value="{{date}}" required></input>
 
 <br><p></p><br>
 <label for="class">{{strings['PICK_A_CLASS']}}</label>
-<select id="class" name="class">
+<select id="class" name="class" value="{{className}}">
 {% for class in classes %}
   <option value="{{ class.name }}">{{ class.name }}</option>
 {% endfor %}
@@ -36,7 +36,7 @@ function displayURL(meetingApp)
 
 <p></p>
 <label for="hour">{{strings['PICK_A_HOUR']}}</label>
-<select id="hour" name="hour">
+<select id="hour" name="hour" value="{{meetingHour}}">
   <option value="0">0.</option>
   <option value="1">1.</option>
   <option value="2">2.</option>
@@ -81,12 +81,12 @@ function displayURL(meetingApp)
 
 <p></p>
 <label for="name" >{{strings['MEETING_NAME']}}</label>
-<input type="text" id="name" name="name" required>
+<input type="text" id="name" name="name" value="{{meetingName}}" required>
 
 <p></p>
 {{strings['MEETING_DESCRIPTION']}}
 <br>
-<textarea id="desc" name="desc" rows="5" cols="30"></textarea>
+<textarea id="desc" name="desc" rows="5" cols="30" ></textarea>
 
 <br>
 <input type="submit" name="submit" value="{{strings['SEND']}}">

@@ -135,6 +135,32 @@ def meetingAdd():
     else:
         abort(403)
 
+@main.route("/meeting/edit/<int:id>", methods=["GET"])
+@login_required
+def meetingEdit(id):
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
+    meeting = Meetings.query.filter_by(id=id).first()
+    print(meeting.meetingApp)
+    if meeting:
+        if current_user.role == "admin" or current_user.id == meeting.teacher_id:
+            return render_template("addmeeting.html",
+                mon=[], tue=[], wed=[], thu=[], fri=[], sat=[],
+                role=current_user.role,
+                name=current_user.first_name,
+                classes = Classes.query.all(),
+                meetingName = meeting.name,
+                date = meeting.date,
+                className = meeting.className,
+                meetingHour = str(meeting.hour),
+                strings = strings
+            ), 200
+        else:
+            abort(403)
+    else:
+        return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
+
 @main.route("/approve/<int:id>", methods=["GET"])
 @login_required
 def approveUser(id):
@@ -209,6 +235,24 @@ def declineUser(id):
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
 
+@main.route("/delete/meeting/<int:id>", methods=["GET"])
+@login_required
+def deleteMeeting(id):
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
+    meeting = Meetings.query.filter_by(id=id).first()
+    print(meeting.teacher_id)
+    if meeting:
+        if (current_user.role == "admin" or current_user.id == meeting.teacher_id):
+            db.session.delete(meeting)
+            db.session.commit()
+            return redirect(url_for("main.allMeetings"))
+        else:
+            abort(403)
+    else:
+        return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
+
 @main.route("/meeting/view/<int:id>", methods=["GET"])
 @login_required
 def meetingView(id):
@@ -241,11 +285,12 @@ def meetingAddPost():
         date = request.form.get('date')
         hour = request.form.get('hour')
         link = request.form.get('urlID')
+        print(classname)
+        print(date)
 
-        ifmeeting = Meetings.query.filter_by(date=date, hour=hour).first()
+        ifmeeting = Meetings.query.filter_by(date=date, hour=hour, className=classname).first()
         lang = getLang().lower()
         strings = getStrings(lang)
-        print(strings)
 
         if ifmeeting:
             flash(strings["ALREADY_RESERVED"])
@@ -283,7 +328,7 @@ def meetingAddPost():
         new_meeting = Meetings(
             class_id=classID.id, required=mandatory, grading=grading, verifying=checking,
             description=desc, meetingApp=app, name=name, className=classID.name, link=link,
-            date=date, hour=hour, byUser=current_user.username
+            date=date, hour=hour, teacher_id=current_user.id
         )
 
         db.session.add(new_meeting)
@@ -292,6 +337,81 @@ def meetingAddPost():
         return redirect(url_for("main.meetingAdd"))
     else:
         abort(403)
+
+@main.route("/meeting/edit/<int:id>", methods=["POST"])
+@login_required
+def meetingEditPost(id):
+    meeting = Meetings.query.filter_by(id=id).first()
+    if meeting:
+        if (current_user.role == "teacher" or current_user.role == "admin"):
+            name = request.form.get('name')
+            desc = request.form.get('desc')
+            grading = request.form.get('grading')
+            mandatory = request.form.get('mandatory')
+            checking = request.form.get('checking')
+            app = request.form.get('confapp')
+            classname = request.form.get('class')
+            date = request.form.get('date')
+            hour = request.form.get('hour')
+            link = request.form.get('urlID')
+            print(classname)
+            print(date)
+
+            ifmeeting = Meetings.query.filter_by(date=date, hour=hour, className=classname).first()
+            lang = getLang().lower()
+            strings = getStrings(lang)
+
+            if ifmeeting:
+                flash(strings["ALREADY_RESERVED"])
+                return redirect(url_for("main.meetingAdd"))
+
+            if (app == "zoom"):
+                link = "https://zoom.us/j/"+link
+            elif (app == "gmeet"):
+                link = "https://meet.google.com/"+link
+            else:
+                link = link
+
+            if (not grading):
+                grading = False
+            else:
+                grading = True
+            
+            if (not mandatory):
+                mandatory = False
+            else:
+                mandatory = True
+            
+            if (not checking):
+                checking = False
+            else:
+                checking = True
+            
+            classID = Classes.query.filter_by(name=classname).first()
+
+            if (not classID):
+                return "<h1>500 Internal Server Error</h1><br>No class with this name", 500
+            
+            print(classID.name)
+
+            meeting.class_id=classID.id
+            meeting.required=mandatory
+            meeting.grading=grading
+            meeting.verifying=checking
+            meeting.description=desc
+            meeting.meetingApp=app
+            meeting.name=name
+            meeting.className=classID.name
+            meeting.link=link
+            meeting.date=date
+            meeting.hour=hour
+            meeting.teacher_id=current_user.id
+            
+            db.session.commit()
+
+            return redirect(url_for("main.meetingAdd"))
+        else:
+            abort(403)
 
 @main.route("/admin/users")
 @login_required

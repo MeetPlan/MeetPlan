@@ -27,10 +27,10 @@
             if ("{{isTeacher}}" == "true"){
               if (id == "") {
                 document.location.href = "/meeting/add";
-              } else {
+              } else if (id != "") {
                 document.location.href = "/meeting/view/"+id;
               }
-            } else {
+            } else if (id != "") {
               document.location.href = "/meeting/view/"+id;
             }
         }

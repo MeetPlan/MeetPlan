@@ -22,7 +22,8 @@ def getEnd(start):
 def getWeekList(dt):
     start = getStartDate(dt)
     datelist = []
-    for i in range(1, 7):
+    for i in range(7):
         #print(i)
         datelist.append(str(start + timedelta(days=i)).split(" ")[0])
+    print(datelist)
     return datelist
