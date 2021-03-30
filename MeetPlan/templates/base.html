@@ -47,9 +47,9 @@ tr, td {
     {% if role=="admin" %}
       <a href="{{ url_for('main.addClass') }}" class="w3-bar-item w3-button w3-padding"><i id="addclass" class="fa fa-school fa-fw"></i>  {{strings["ADD_CLASS"]}}</a>
       <a href="{{ url_for('main.allUsers') }}" class="w3-bar-item w3-button w3-padding"><i id="allusers" class="fa fa-users-cog fa-fw"></i>  {{strings["ALL_USERS"]}}</a>
-      <a href="{{ url_for('main.allMeetings') }}" class="w3-bar-item w3-button w3-padding"><i id="allmeetings" class="fa fa-chalkboard-teacher fa-fw"></i>  {{strings["ALL_MEETINGS"]}}</a>
     {% endif %}
     {% if role=="admin" or role=="teacher" %}
+      <a href="{{ url_for('main.allMeetings') }}" class="w3-bar-item w3-button w3-padding"><i id="allmeetings" class="fa fa-chalkboard-teacher fa-fw"></i>  {{strings["ALL_MEETINGS"]}}</a>
       <!--<a href="{{ url_for('main.meetingPicker') }}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Dodaj srečanje</a>-->
     {% endif %}
     <a href="{{ url_for('main.settings')}}" class="w3-bar-item w3-button w3-padding"><i id="settings" class="fa fa-cog fa-fw"></i>  {{strings["SETTINGS"]}}</a><br><br>

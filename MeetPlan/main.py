@@ -406,7 +406,7 @@ def meetingEditPost(id):
             meeting.date=date
             meeting.hour=hour
             meeting.teacher_id=current_user.id
-            
+
             db.session.commit()
 
             return redirect(url_for("main.meetingAdd"))
@@ -434,6 +434,9 @@ def allMeetings():
 
     if (current_user.role == "admin"):
         meetings = Meetings.query.all()
+        return render_template("allmeetings.html", meetings=meetings, strings=strings, name=current_user.first_name, role=current_user.role)
+    elif (current_user.role == "teacher"):
+        meetings = Meetings.query.filter_by(teacher_id=current_user.id).all()
         return render_template("allmeetings.html", meetings=meetings, strings=strings, name=current_user.first_name, role=current_user.role)
     else:
         abort(403)

@@ -15,6 +15,7 @@
             <td> {{meeting.className}}</td>
             <td> {{meeting.byUser}}</td>
             <td><a href="/meeting/view/{{meeting.id}}">More</a></td>
+            <td><a href="/meeting/edit/{{meeting.id}}">Edit</a></td>
             <td><a href="/delete/meeting/{{meeting.id}}">Delete</a></td>
         </tr>
     {% endfor %}
