@@ -344,32 +344,29 @@ def meetingAddPost():
         link = request.form.get('urlID')
         pmi = request.form.get('pmi')
         group = request.form.get('group')
+        """
         print(classname)
         print(date)
         print(pmi)
         print(group)
+        """
 
         classID = Classes.query.filter_by(name=classname).first()
 
         if group != "none":
             print("ok, grouped")
             group = MeetingGroup.query.filter_by(meetingGroup=group).first().meetingGroup
-            group_id = MeetingGroup.query.filter_by(meetingGroup=group).first().id
         else:
             group = None
-            group_id = None
 
         ifmeeting = Meetings.query.filter_by(date=date, hour=hour, class_id=classID.id).first()
         lang = getLang().lower()
         strings = getStrings(lang)
 
-        if ifmeeting:
-            print(ifmeeting.group_id != group_id)
-            print(ifmeeting.group_id)
-        
-        print(group_id)
+        #print(ifmeeting.group_id)
+        #print(group)
 
-        if ifmeeting and ifmeeting.group_id == group_id:
+        if ifmeeting and ifmeeting.group_id != group:
             flash(strings["ALREADY_RESERVED"])
             return redirect(url_for("main.meetingAdd"))
 
