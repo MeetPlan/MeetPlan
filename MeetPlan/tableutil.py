@@ -1,9 +1,12 @@
 from .utils import *
-from .models import Meetings
+from .models import Meetings, Classes, MeetingGroup
 from .emptyobject import EmptyObject
+from .objects import MeetingGroupObject
 
 def getOrderedList(classname):
     week = getWeekList(getDate())
+
+    classname = Classes.query.filter_by(name=classname).first()
 
     mon = []
     tue = []
@@ -16,20 +19,36 @@ def getOrderedList(classname):
     for i in week:
         for i2 in range(9):
             #print(i2)
-            meeting = Meetings.query.filter_by(date=i, hour=i2, className=classname).first()
+            meeting = Meetings.query.filter_by(date=i, hour=i2, class_id=classname.id).all()
             if meeting:
-                if index == 0:
-                    mon.append(meeting)
-                elif index == 1:
-                    tue.append(meeting)
-                elif index == 2:
-                    wed.append(meeting)
-                elif index == 3:
-                    thu.append(meeting)
-                elif index == 4:
-                    fri.append(meeting)
-                elif index == 5:
-                    sat.append(meeting)
+                if len(meeting) > 1:
+                    print(meeting[0].group_id)
+                    group = MeetingGroup.query.filter_by(meetingGroup=meeting[0].group_id).first()
+                    if index == 0:
+                        mon.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                    elif index == 1:
+                        tue.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                    elif index == 2:
+                        wed.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                    elif index == 3:
+                        thu.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                    elif index == 4:
+                        fri.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                    elif index == 5:
+                        sat.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                else:
+                    if index == 0:
+                        mon.append(MeetingGroupObject(meeting[0], None))
+                    elif index == 1:
+                        tue.append(MeetingGroupObject(meeting[0], None))
+                    elif index == 2:
+                        wed.append(MeetingGroupObject(meeting[0], None))
+                    elif index == 3:
+                        thu.append(MeetingGroupObject(meeting[0], None))
+                    elif index == 4:
+                        fri.append(MeetingGroupObject(meeting[0], None))
+                    elif index == 5:
+                        sat.append(MeetingGroupObject(meeting[0], None))
             else:
                 if index == 0:
                     mon.append(EmptyObject())

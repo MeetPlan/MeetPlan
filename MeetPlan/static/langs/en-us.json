@@ -70,5 +70,10 @@
     "UPDATE": "Update",
     "NAME": "Release name",
     "DESCRIPTION": "Description: ",
-    "UP_TO_DATE": "Already up to date."
+    "UP_TO_DATE": "Already up to date.",
+    "ADD_GROUP": "Add group",
+    "SELECT_BETWEEN_MEETINGS": "You can select between meetings",
+    "GROUP_WITH": "Group with: ",
+    "NONE": "None",
+    "PMI?": "Personal Meeting Room?"
 }

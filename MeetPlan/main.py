@@ -97,6 +97,24 @@ def addClassPost():
     db.session.commit()
     return redirect(url_for("main.addClass"))
 
+@main.route("/group/add", methods=["GET"])
+@login_required
+def addGroup():
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
+    return render_template("addmeetinggroups.html", groups = MeetingGroup.query.all(), role=current_user.role, name=current_user.first_name, strings=strings)
+
+@main.route("/group/add", methods=["POST"])
+@login_required
+def addGroupPost():
+    name = request.form["group"]
+    print(name)
+    newClass = MeetingGroup(meetingGroup=name)
+    db.session.add(newClass)
+    db.session.commit()
+    return redirect(url_for("main.addGroup"))
+
 @login_required
 @main.route("/meeting/picker", methods=["GET"])
 def meetingPicker():
@@ -130,7 +148,8 @@ def meetingAdd():
             role=current_user.role,
             name=current_user.first_name,
             classes = Classes.query.all(),
-            strings = strings
+            strings = strings,
+            groups=MeetingGroup.query.all()
         ), 200
     else:
         abort(403)
@@ -253,19 +272,57 @@ def deleteMeeting(id):
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
 
+@main.route("/group/view/<int:id>", methods=["GET", "POST"])
+@login_required
+def groupView(id):
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
+    meeting = Meetings.query.filter_by(id=id).first()
+    classname = Classes.query.filter_by(id=meeting.class_id).first()
+    print(classname)
+    if meeting:
+        weeklist = getWeekList(getDate())
+        #print(weeklist)
+        #print(meeting.date)
+        if (meeting.date in weeklist or current_user.role == "teacher" or current_user.role == "admin"):
+            if meeting.group_id:
+                print("Meeting has a Group ID")
+                meeting = Meetings.query.filter_by(date=meeting.date, group_id=meeting.group_id, hour=meeting.hour).all()
+                print(meeting[0].group_id)
+                return render_template("groupview.html", meetings=meeting, strings=strings, role=current_user.role, name=current_user.first_name)
+            else:
+                return redirect(url_for("main.meetingView"))
+        else:
+            abort(403)
+    else:
+        return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
+
 @main.route("/meeting/view/<int:id>", methods=["GET"])
 @login_required
 def meetingView(id):
     lang = getLang().lower()
     strings = getStrings(lang)
 
+    continue2 = request.args.get("continue")
+
     meeting = Meetings.query.filter_by(id=id).first()
+    classname = Classes.query.filter_by(id=meeting.class_id).first()
+    print(classname)
     if meeting:
         weeklist = getWeekList(getDate())
         #print(weeklist)
         #print(meeting.date)
         if (meeting.date in weeklist or current_user.role == "teacher" or current_user.role == "admin"):
-            return render_template("meetingview.html", meeting=meeting, strings=strings, name=current_user.first_name, role=current_user.role)
+            print(continue2)
+            if continue2 == "true":
+                return render_template("meetingview.html", meeting=meeting, strings=strings, name=current_user.first_name, role=current_user.role, className=classname.name)
+            if meeting.group_id:
+                print("Meeting has a Group ID")
+                meeting = Meetings.query.filter_by(date=meeting.date, group_id=meeting.group_id, hour=meeting.hour).all()
+                return redirect(url_for("main.groupView", id=id))
+            else:
+                return render_template("meetingview.html", meeting=meeting, strings=strings, name=current_user.first_name, role=current_user.role, className=classname.name)
         else:
             abort(403)
     else:
@@ -285,23 +342,45 @@ def meetingAddPost():
         date = request.form.get('date')
         hour = request.form.get('hour')
         link = request.form.get('urlID')
+        pmi = request.form.get('pmi')
+        group = request.form.get('group')
         print(classname)
         print(date)
+        print(pmi)
+        print(group)
 
-        ifmeeting = Meetings.query.filter_by(date=date, hour=hour, className=classname).first()
+        classID = Classes.query.filter_by(name=classname).first()
+
+        if group != "none":
+            print("ok, grouped")
+            group = MeetingGroup.query.filter_by(meetingGroup=group).first().meetingGroup
+            group_id = MeetingGroup.query.filter_by(meetingGroup=group).first().id
+        else:
+            group = None
+            group_id = None
+
+        ifmeeting = Meetings.query.filter_by(date=date, hour=hour, class_id=classID.id).first()
         lang = getLang().lower()
         strings = getStrings(lang)
 
         if ifmeeting:
+            print(ifmeeting.group_id != group_id)
+            print(ifmeeting.group_id)
+        
+        print(group_id)
+
+        if ifmeeting and ifmeeting.group_id == group_id:
             flash(strings["ALREADY_RESERVED"])
             return redirect(url_for("main.meetingAdd"))
 
-        if (app == "zoom"):
+        if (app == "zoom" and pmi == "no"):
             link = "https://zoom.us/j/"+link
-        elif (app == "gmeet"):
+        elif (app == "gmeet" and pmi == "no"):
             link = "https://meet.google.com/"+link
-        else:
+        elif (pmi == "no"):
             link = link
+        else:
+            link = current_user.pmi
 
         if (not grading):
             grading = False
@@ -317,18 +396,23 @@ def meetingAddPost():
             checking = False
         else:
             checking = True
-        
-        classID = Classes.query.filter_by(name=classname).first()
 
         if (not classID):
             return "<h1>500 Internal Server Error</h1><br>No class with this name", 500
-        
-        print(classID.name)
 
         new_meeting = Meetings(
-            class_id=classID.id, required=mandatory, grading=grading, verifying=checking,
-            description=desc, meetingApp=app, name=name, className=classID.name, link=link,
-            date=date, hour=hour, teacher_id=current_user.id
+            class_id=classID.id, 
+            required=mandatory,
+            grading=grading,
+            verifying=checking,
+            description=desc,
+            meetingApp=app,
+            name=name,
+            link=link,
+            date=date,
+            hour=hour,
+            teacher_id=current_user.id,
+            group_id=group
         )
 
         db.session.add(new_meeting)

@@ -65,5 +65,10 @@
     "NOT_FOUND": "Ni najdeno",
     "NOT_FOUND_DB": "Ni najdeno v shrambi podatkov",
     "ADD_A_CLASS": "Dodajte razred",
-    "ALL_CLASSES": "Vsi razredi: "
+    "ALL_CLASSES": "Vsi razredi: ",
+    "ADD_GROUP": "Dodaj skupino srečanj",
+    "SELECT_BETWEEN_MEETINGS": "Lahko izbirate med naslednjimi srečanji: ",
+    "GROUP_WITH": "Dodaj v skupino: ",
+    "NONE": "Nič",
+    "PMI?": "Osebna soba za srečanje?"
 }

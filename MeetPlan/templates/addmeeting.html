@@ -3,6 +3,14 @@
 {% block body %}
 
 <script>
+function nopmi() {
+  document.getElementById("pmiorurl").innerHTML = '<span id="url"></span><input type="text" id="urlID" name="urlID" required>';
+}
+
+function pmi() {
+  document.getElementById("pmiorurl").innerHTML = '';
+}
+
 function displayURL(meetingApp)
 {
   if (meetingApp == "zoom") {
@@ -49,6 +57,13 @@ function displayURL(meetingApp)
 </select>
 
 <p></p>
+{{strings["PMI?"]}}<br>
+<input type="radio" id="yes" name="pmi" value="yes" onclick="pmi();" required>
+<label for="zoom">{{strings["YES"]}}</label><br>
+<input type="radio" id="no" name="pmi" value="no" onclick="nopmi();">
+<label for="skype">{{strings["NO"]}}</label><br>
+
+<p></p>
 {{strings['PICK_A_CONF_APP']}}<br>
 <input type="radio" id="zoom" name="confapp" value="zoom" onclick="displayURL('zoom');" required>
 <label for="zoom">Zoom Meetings</label><br>
@@ -60,8 +75,12 @@ function displayURL(meetingApp)
 <label for="webex">Cisco Webex</label><br>
 <input type="radio" id="gmeet" name="confapp" value="gmeet" onclick="displayURL('gmeet');">
 <label for="gmeet">Google Meet</label><br>
-<br>
-<span id="url"></span><input type="text" id="urlID" name="urlID" required>
+<input type="radio" id="msteams" name="confapp" value="msteams" onclick="displayURL('msteams');">
+<label for="msteams">Microsoft Teams</label>
+
+<p></p>
+Link: <br>
+<div id="pmiorurl"></div>
 
 <p></p>
 <label>
@@ -88,7 +107,16 @@ function displayURL(meetingApp)
 <br>
 <textarea id="desc" name="desc" rows="5" cols="30" ></textarea>
 
-<br>
+<p></p>
+<label for="group">{{strings["GROUP_WITH"]}}</label>
+<select id="group" name="group" value="none">
+<option value="none">{{strings["NONE"]}}</option>
+{% for group in groups %}
+  <option value="{{ group.meetingGroup }}">{{ group.meetingGroup }}</option>
+{% endfor %}
+</select>
+
+<br><p></p>
 <input type="submit" name="submit" value="{{strings['SEND']}}">
 </form>
 
