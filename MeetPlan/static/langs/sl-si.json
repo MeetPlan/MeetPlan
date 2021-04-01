@@ -70,5 +70,8 @@
     "SELECT_BETWEEN_MEETINGS": "Lahko izbirate med naslednjimi srečanji: ",
     "GROUP_WITH": "Dodaj v skupino: ",
     "NONE": "Nič",
-    "PMI?": "Osebna soba za srečanje?"
+    "PMI?": "Osebna soba za srečanje?",
+    "ADD_PMI": "Osebna soba za srečanje: ",
+    "PICK_A_MAX": "Izberite, koliko je lahko največ srečanj na dan",
+    "MAXIMUM_EXCEEDED": "Število največ srečanj na dan je prekoračeno"
 }

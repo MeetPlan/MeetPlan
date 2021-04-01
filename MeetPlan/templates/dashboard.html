@@ -3,15 +3,20 @@
 {% block body %}
 <div class="w3-container">
 
-<form method="post">
-<label for="class">{{strings["PICK_A_CLASS"]}}</label>
-<select id="class" name="class">
+<script>
+function selectClass(classname) {
+  var classname2 = '?class=' + classname.value;
+  console.log(classname2)
+  self.location = classname2;
+}
+</script>
+
+<select id="class" name="class" onchange="javascript:selectClass(this.options[this.selectedIndex])">
+<option value="">{{strings["PICK_A_CLASS"]}}</option>
 {% for class in classes %}
   <option value="{{ class.name }}">{{ class.name }}</option>
 {% endfor %}
 </select>
-<input type="submit" name="submit" value="{{strings['SEND']}}">
-</form>
 
 <br>
 

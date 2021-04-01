@@ -75,5 +75,8 @@
     "SELECT_BETWEEN_MEETINGS": "You can select between meetings",
     "GROUP_WITH": "Group with: ",
     "NONE": "None",
-    "PMI?": "Personal Meeting Room?"
+    "PMI?": "Personal Meeting Room?",
+    "ADD_PMI": "PMI: ",
+    "PICK_A_MAX": "Pick a maximum of meetings",
+    "MAXIMUM_EXCEEDED": "Maximum of meetings is exceeded"
 }

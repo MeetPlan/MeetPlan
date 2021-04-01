@@ -6,6 +6,7 @@ from .tableutil import *
 from .emptyobject import generateEmptyList
 import json
 import os
+import sys
 
 main = Blueprint('main', __name__)
 
@@ -13,7 +14,11 @@ main = Blueprint('main', __name__)
 def getStrings(lang):
     SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
     json_url = os.path.join(SITE_ROOT, 'static', 'langs', lang+'.json')
-    return json.loads(open(json_url, encoding="utf-8").read(), encoding="utf-8")
+    if sys.version_info <= (3, 8):
+        print("Running at 3.8 or lower")
+        return json.loads(open(json_url, encoding="utf-8").read(), encoding="utf-8")
+    else:
+        return json.loads(open(json_url, encoding="utf-8").read())
 
 def getLang():
     value = Values.query.filter_by(name="lang").first()
@@ -21,6 +26,16 @@ def getLang():
         return value.value
     else:
         val = Values(name="lang", value="en-US")
+        db.session.add(val)
+        db.session.commit()
+        return val.value
+
+def getMax():
+    value = Values.query.filter_by(name="max").first()
+    if value:
+        return value.value
+    else:
+        val = Values(name="max", value="3")
         db.session.add(val)
         db.session.commit()
         return val.value
@@ -197,6 +212,29 @@ def approveUser(id):
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
 
+@main.route("/user/settings", methods=["GET"])
+@login_required
+def userSettings():
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
+    return render_template(
+        "usersettings.html",
+        currentPMI=current_user.pmi,
+        strings=strings,
+        name=current_user.first_name,
+        role=current_user.role
+    )
+
+@main.route("/user/settings", methods=["POST"])
+@login_required
+def userSettingsPost():
+    pmi = request.form.get("pmi")
+    user = User.query.filter_by(id=current_user.id).first()
+    user.pmi = pmi
+    db.session.commit()
+    return redirect(url_for("main.userSettings"))
+
 @main.route("/promote/<role>/<int:id>", methods=["GET"])
 @login_required
 def promoteUser(role, id):
@@ -351,6 +389,9 @@ def meetingAddPost():
         print(group)
         """
 
+        if pmi == "yes":
+            link = current_user.pmi
+
         classID = Classes.query.filter_by(name=classname).first()
 
         if group != "none":
@@ -359,25 +400,41 @@ def meetingAddPost():
         else:
             group = None
 
-        ifmeeting = Meetings.query.filter_by(date=date, hour=hour, class_id=classID.id).first()
+        ifmeeting = Meetings.query.filter_by(date=date, hour=hour, class_id=classID.id).all()
+        hmeeting = Meetings.query.filter_by(date=date, class_id=classID.id).all()
+        print(hmeeting)
         lang = getLang().lower()
         strings = getStrings(lang)
 
-        #print(ifmeeting.group_id)
-        #print(group)
+        maximum = int(getMax())
+        print(maximum)
 
-        if ifmeeting and ifmeeting.group_id != group:
+        groups = []
+        index = 0
+
+        for meeting in hmeeting:
+            if meeting.group_id:
+                if meeting.group_id not in groups:
+                    groups.append(meeting.group_id)
+                    index += 1
+            else:
+                index += 1
+        print(index)
+
+        if index > maximum:
+            flash(strings["MAXIMUM_EXCEEDED"])
+            return redirect(url_for("main.meetingAdd"))
+
+        if ifmeeting and ifmeeting[0].group_id != group:
             flash(strings["ALREADY_RESERVED"])
             return redirect(url_for("main.meetingAdd"))
 
-        if (app == "zoom" and pmi == "no"):
+        if (app == "zoom"):
             link = "https://zoom.us/j/"+link
-        elif (app == "gmeet" and pmi == "no"):
+        elif (app == "gmeet"):
             link = "https://meet.google.com/"+link
-        elif (pmi == "no"):
-            link = link
         else:
-            link = current_user.pmi
+            link = link
 
         if (not grading):
             grading = False
@@ -438,7 +495,7 @@ def meetingEditPost(id):
             print(classname)
             print(date)
 
-            ifmeeting = Meetings.query.filter_by(date=date, hour=hour, className=classname).first()
+            ifmeeting = Meetings.query.filter_by(date=date, hour=hour, className=classname).all()
             lang = getLang().lower()
             strings = getStrings(lang)
 
@@ -529,7 +586,7 @@ def settings():
     strings = getStrings(lang)
 
     if (current_user.role == "admin"):
-        return render_template("settings.html", strings=strings, name=current_user.first_name, role=current_user.role)
+        return render_template("settings.html", strings=strings, name=current_user.first_name, role=current_user.role, max=getMax())
     else:
         abort(403)
 
@@ -538,6 +595,12 @@ def settings():
 def settingsPost():
     if (current_user.role == "admin"):
         lang = request.form.get('lang')
+        maxmeet = request.form.get('max')
+
+        max2 = getMax()
+        max3 = Values.query.filter_by(name="max").first()
+        max3.value = str(maxmeet)
+
         val = Values.query.filter_by(name="lang").first()
         val.value = lang
         db.session.commit()
