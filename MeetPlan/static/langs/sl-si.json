@@ -73,5 +73,6 @@
     "PMI?": "Osebna soba za srečanje?",
     "ADD_PMI": "Osebna soba za srečanje: ",
     "PICK_A_MAX": "Izberite, koliko je lahko največ srečanj na dan",
-    "MAXIMUM_EXCEEDED": "Število največ srečanj na dan je prekoračeno"
+    "MAXIMUM_EXCEEDED": "Število največ srečanj na dan je prekoračeno",
+    "NO_PMI_SET": "Niste vpisali številke osebne sobe za srečanje"
 }

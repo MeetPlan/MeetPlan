@@ -78,5 +78,6 @@
     "PMI?": "Personal Meeting Room?",
     "ADD_PMI": "PMI: ",
     "PICK_A_MAX": "Pick a maximum of meetings",
-    "MAXIMUM_EXCEEDED": "Maximum of meetings is exceeded"
+    "MAXIMUM_EXCEEDED": "Maximum of meetings is exceeded",
+    "NO_PMI_SET": "You haven't set the PMI"
 }

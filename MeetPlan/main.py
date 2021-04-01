@@ -389,8 +389,15 @@ def meetingAddPost():
         print(group)
         """
 
+        lang = getLang().lower()
+        strings = getStrings(lang)
+
         if pmi == "yes":
-            link = current_user.pmi
+            if current_user.pmi:
+                link = current_user.pmi
+            else:
+                flash(strings["NO_PMI_SET"])
+                return redirect(url_for("main.meetingAdd"))
 
         classID = Classes.query.filter_by(name=classname).first()
 
@@ -403,8 +410,6 @@ def meetingAddPost():
         ifmeeting = Meetings.query.filter_by(date=date, hour=hour, class_id=classID.id).all()
         hmeeting = Meetings.query.filter_by(date=date, class_id=classID.id).all()
         print(hmeeting)
-        lang = getLang().lower()
-        strings = getStrings(lang)
 
         maximum = int(getMax())
         print(maximum)
