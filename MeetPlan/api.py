@@ -127,11 +127,13 @@ def getMeeting(id):
     else:
         if (loginUser(username, password)["success"] == True):
             meeting = Meetings.query.filter_by(id=id).first()
+            classes = Classes.query.filter_by(id=meeting.class_id).first()
             if meeting:
                 json = {
                     "name": meeting.name,
                     "description": meeting.description,
-                    "className": meeting.className,
+                    "class": meeting.class_id,
+                    "class": classes.name,
                     "grading": meeting.grading,
                     "verifying": meeting.verifying,
                     "required": meeting.required,
@@ -139,7 +141,9 @@ def getMeeting(id):
                     "link": meeting.link,
                     "date": meeting.date,
                     "hour": meeting.hour,
-                    "id": meeting.id
+                    "id": meeting.id,
+                    "teacher_id": meeting.teacher_id,
+                    "group": meeting.meetingGroup
                 }
 
                 return jsonify(json), 200

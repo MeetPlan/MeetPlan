@@ -1,7 +1,7 @@
 class EmptyObject(object):
     name = ""
     id = ""
-    className = ""
+    class_id = ""
     isGroup = False
 
 def generateEmptyList():

@@ -91,37 +91,66 @@ def getOrderedListAPI(classname):
     for i in week:
         for i2 in range(9):
             #print(i2)
-            meeting = Meetings.query.filter_by(date=i, hour=i2, className=classname).first()
+            classes = Classes.query.filter_by(name=classname).first()
+            meeting = Meetings.query.filter_by(date=i, hour=i2, class_id=classes.id).all()
             if meeting:
-                json = {
-                    "name": meeting.name,
-                    "id": meeting.id,
-                    "class": meeting.className,
-                    "hour": i2,
-                    "weekday": i
-                }
-
-                if index == 0:
-                    mon.append(json)
-                elif index == 1:
-                    tue.append(json)
-                elif index == 2:
-                    wed.append(json)
-                elif index == 3:
-                    thu.append(json)
-                elif index == 4:
-                    fri.append(json)
-                elif index == 5:
-                    sat.append(json)
+                if len(meeting) > 1:
+                    for meetin in meeting:
+                        group = MeetingGroup.query.filter_by(meetingGroup=meetin.group_id).first()
+                        json = {
+                            "name": meeting.name,
+                            "id": meeting.id,
+                            "class": meeting.class_id,
+                            "className": classes.name,
+                            "hour": i2,
+                            "weekday": i,
+                            "group": group.id
+                        }
+                        if index == 0:
+                            mon.append(json)
+                        elif index == 1:
+                            tue.append(json)
+                        elif index == 2:
+                            wed.append(json)
+                        elif index == 3:
+                            thu.append(json)
+                        elif index == 4:
+                            fri.append(json)
+                        elif index == 5:
+                            sat.append(json)
+                else:
+                    meeting = meeting[0]
+                    json = {
+                        "name": meeting.name,
+                        "id": meeting.id,
+                        "class": meeting.class_id,
+                        "className": classes.name,
+                        "hour": i2,
+                        "weekday": i,
+                        "group": None
+                    }
+                    if index == 0:
+                        mon.append(json)
+                    elif index == 1:
+                        tue.append(json)
+                    elif index == 2:
+                        wed.append(json)
+                    elif index == 3:
+                        thu.append(json)
+                    elif index == 4:
+                        fri.append(json)
+                    elif index == 5:
+                        sat.append(json)
             else:
                 meeting = EmptyObject()
                 
                 json = {
                     "name": meeting.name,
                     "id": meeting.id,
-                    "class": meeting.className,
+                    "class": meeting.class_id,
                     "hour": i2,
-                    "weekday": i
+                    "weekday": i,
+                    "group": None
                 }
 
                 if index == 0:
