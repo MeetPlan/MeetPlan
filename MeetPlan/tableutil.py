@@ -98,9 +98,9 @@ def getOrderedListAPI(classname):
                     for meetin in meeting:
                         group = MeetingGroup.query.filter_by(meetingGroup=meetin.group_id).first()
                         json = {
-                            "name": meeting.name,
-                            "id": meeting.id,
-                            "class": meeting.class_id,
+                            "name": group.meetingGroup,
+                            "id": meetin.id,
+                            "class": meetin.class_id,
                             "className": classes.name,
                             "hour": i2,
                             "weekday": i,
