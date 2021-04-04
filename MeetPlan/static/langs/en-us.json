@@ -79,5 +79,9 @@
     "ADD_PMI": "PMI: ",
     "PICK_A_MAX": "Pick a maximum of meetings",
     "MAXIMUM_EXCEEDED": "Maximum of meetings is exceeded",
-    "NO_PMI_SET": "You haven't set the PMI"
+    "NO_PMI_SET": "You haven't set the PMI",
+    "CLASSNAME": "Classname: ",
+    "WEEK": "Week: ",
+    "HOUR": "Hour",
+    "TO": " to "
 }

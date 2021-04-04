@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/w3css/w3.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='fonts/Raleway.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome5/css/all.css') }}">
+
+<body class="w3-light-grey" onload="window.print();">
+
+    <div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+      <span class="w3-bar-item w3-right">MeetPlan</span>
+    </div>
+
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+
+.en-US, .sl-SI { display:none; } /* hide all elements with a language class */
+.en-US:lang(en-US), .sl-SI:lang(sl-SI) { display:block; } /* show those elements that match their language class */
+
+tr, td {
+  width: 150px;
+  text-align: center;
+  padding: 5px;
+}
+</style>
+<div class="w3-main" style="margin-left:10px;margin-top:43px;">
+    <div class="w3-row">
+        <div class="w3-col s2">
+            <div class="w3-container">
+                <br>
+                {{strings["CLASSNAME"]}} <b>{{classname}}</b><br>
+                {{strings["WEEK"]}} <b>{{week}}</b><br>
+            </div>
+        </div>
+        <div class="w3-col s10">
+            <div class="w3-container">
+                {% include 'baseDate.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>

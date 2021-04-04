@@ -22,6 +22,11 @@ function selectClass(classname) {
 
 {% include 'baseDate.html' %}
 
+{% if classname %}
+  <br>
+  <a href="/print?class={{classname}}"><i class="fas fa-print"></i></a>
+{% endif %}
+
 <script>
 // Get the Sidebar
 var mySidebar = document.getElementById("mySidebar");

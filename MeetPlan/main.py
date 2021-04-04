@@ -74,7 +74,8 @@ def dashboard():
             sat=urnik["sat"],
             dates = weeks,
             isTeacher = isTeacher,
-            strings = strings
+            strings = strings,
+            classname=classname
         )
     else:
         flash(strings["SELECT_CLASS"])
@@ -91,8 +92,55 @@ def dashboard():
             role=current_user.role,
             dates=weeks,
             isTeacher=isTeacher,
-            strings=strings
+            strings=strings,
+            classname=None
         )
+
+@main.route("/print")
+@login_required
+def printTable():
+    classname = request.values.get('class')
+    bare = request.values.get('bare')
+
+    current_date = getDate()
+    weeks = getWeekList(current_date)
+
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
+    if classname:
+        print(bare)
+        if bare == "true":
+            print("True")
+            urnik = getOrderedList(classname)
+        
+            return render_template("bareprint.html",
+                    mon=urnik["mon"],
+                    tue=urnik["tue"],
+                    wed=urnik["wed"],
+                    thu=urnik["thu"],
+                    fri=urnik["fri"],
+                    sat=urnik["sat"],
+                    dates = weeks,
+                    strings = strings
+                )
+        else:
+            urnik = getOrderedList(classname)
+        
+            return render_template("print.html",
+                    mon=urnik["mon"],
+                    tue=urnik["tue"],
+                    wed=urnik["wed"],
+                    thu=urnik["thu"],
+                    fri=urnik["fri"],
+                    sat=urnik["sat"],
+                    dates = weeks,
+                    strings = strings,
+                    classname=classname,
+                    week=weeks[0]+strings["TO"]+weeks[-1]
+                )
+    else:
+        return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
 
 @main.route("/class/add", methods=["GET"])
 @login_required

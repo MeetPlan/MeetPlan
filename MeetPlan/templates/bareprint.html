@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/w3css/w3.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='fonts/Raleway.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome5/css/all.css') }}">
+<body  onload="window.print();">
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+
+.en-US, .sl-SI { display:none; } /* hide all elements with a language class */
+.en-US:lang(en-US), .sl-SI:lang(sl-SI) { display:block; } /* show those elements that match their language class */
+
+tr, td {
+  width: 150px;
+  text-align: center;
+  padding: 5px;
+}
+</style>
+
+{% include 'baseDate.html' %}
+</body>
