@@ -145,38 +145,50 @@ def printTable():
 @main.route("/class/add", methods=["GET"])
 @login_required
 def addClass():
-    lang = getLang().lower()
-    strings = getStrings(lang)
+    if current_user.role == "admin":
+        lang = getLang().lower()
+        strings = getStrings(lang)
 
-    return render_template("addclass.html", classes = Classes.query.all(), role=current_user.role, name=current_user.first_name, strings=strings)
+        return render_template("addclass.html", classes = Classes.query.all(), role=current_user.role, name=current_user.first_name, strings=strings)
+    else:
+        abort(403)
 
 @main.route("/class/add", methods=["POST"])
 @login_required
 def addClassPost():
-    name = request.form["class"]
-    print(name)
-    newClass = Classes(name=name)
-    db.session.add(newClass)
-    db.session.commit()
-    return redirect(url_for("main.addClass"))
+    if current_user.role == "admin":
+        name = request.form["class"]
+        print(name)
+        newClass = Classes(name=name)
+        db.session.add(newClass)
+        db.session.commit()
+        return redirect(url_for("main.addClass"))
+    else:
+        abort(403)
 
 @main.route("/group/add", methods=["GET"])
 @login_required
 def addGroup():
-    lang = getLang().lower()
-    strings = getStrings(lang)
+    if current_user.role == "admin":
+        lang = getLang().lower()
+        strings = getStrings(lang)
 
-    return render_template("addmeetinggroups.html", groups = MeetingGroup.query.all(), role=current_user.role, name=current_user.first_name, strings=strings)
+        return render_template("addmeetinggroups.html", groups = MeetingGroup.query.all(), role=current_user.role, name=current_user.first_name, strings=strings)
+    else:
+        abort(403)
 
 @main.route("/group/add", methods=["POST"])
 @login_required
 def addGroupPost():
-    name = request.form["group"]
-    print(name)
-    newClass = MeetingGroup(meetingGroup=name)
-    db.session.add(newClass)
-    db.session.commit()
-    return redirect(url_for("main.addGroup"))
+    if current_user.role == "admin":
+        name = request.form["group"]
+        print(name)
+        newClass = MeetingGroup(meetingGroup=name)
+        db.session.add(newClass)
+        db.session.commit()
+        return redirect(url_for("main.addGroup"))
+    else:
+        abort(403)
 
 @login_required
 @main.route("/meeting/picker", methods=["GET"])
