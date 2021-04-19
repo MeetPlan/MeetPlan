@@ -3,7 +3,7 @@
 # MeetPlan
 Plan Zoom, Google Duo, Skype... meetings
 
-This is an Flask app meant especially for schools. It is inspired by Corona-Home schooling and is ultra safe aand customized to needs of the school
+This is an Flask app meant especially for schools. It is inspired by Corona-Home schooling and is ultra safe and customized to needs of the school
 
 # Translations
 Translations are held in `MeetPlan/static/langs` folder. You can translate them if you want.
