@@ -55,6 +55,12 @@ tr, td {
       <a href="{{ url_for('main.allMeetings') }}" class="w3-bar-item w3-button w3-padding"><i id="allmeetings" class="fa fa-chalkboard-teacher fa-fw"></i>  {{strings["ALL_MEETINGS"]}}</a>
       <!--<a href="{{ url_for('main.meetingPicker') }}" class="w3-bar-item w3-button w3-padding"><i class="fa fa-users fa-fw"></i>  Dodaj srečanje</a>-->
     {% endif %}
+    {% if role == "admin" %}
+      <p></p><br><p></p>
+      <b class="w3-padding w3-bar-item"><i class="fa fa-exclamation-triangle fa-fw"></i>  {{strings["DANGER_ZONE"]}}</b>
+      <a href="{{ url_for('ota.update') }}" class="w3-bar-item w3-button w3-padding"><i id="update" class="fa fa-wrench fa-fw"></i>  {{strings["UPDATE"]}}</a>
+      <a href="{{ url_for('db.export') }}" class="w3-bar-item w3-button w3-padding"><i id="update" class="fa fa-database fa-fw"></i>  {{strings["DATABASE_EXPORT"]}}</a>
+    {% endif %}
     <br><br>
   </div>
 </nav>

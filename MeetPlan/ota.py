@@ -17,6 +17,7 @@ def update():
         lang = getLang().lower()
         strings = getStrings(lang)
         r = httpx.get("https://api.github.com/repos/MeetPlan/MeetPlan/releases")
+        print(r.json()[0])
         return render_template("ota.html", release=r.json()[0], strings=strings, role=current_user.role, name=current_user.first_name)
     else:
         abort(403)
@@ -28,13 +29,14 @@ def updatePost():
         lang = getLang().lower()
         strings = getStrings(lang)
         process = subprocess.Popen(["git", "pull"], stdout=subprocess.PIPE)
-        output = process.communicate()[0]
+        output = process.communicate()[0].decode()
         print(output)
-        if (output == b'Already up to date.\n'):
+        if ('up to date' in output):
+            print("UP TO DATE")
             flash(strings["UP_TO_DATE"])
             return redirect(url_for("ota.update"))
         elif ("Updating" in output):
-            flash("Updated successfully")
+            flash(strings["UPDATE_SUCCESSFUL"])
             return redirect(url_for("ota.update"))
         #return render_template("ota.html", release=r.json()[0], strings=strings)
     else:

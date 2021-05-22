@@ -38,6 +38,10 @@ def create_app():
     app.register_blueprint(main_blueprint)
 
     # blueprint for non-auth parts of app
+    from .db import db as db_blueprint
+    app.register_blueprint(db_blueprint)
+
+    # blueprint for non-auth parts of app
     from .ota import ota as ota_blueprint
     app.register_blueprint(ota_blueprint)
 

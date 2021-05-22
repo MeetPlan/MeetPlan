@@ -78,5 +78,17 @@
     "CLASSNAME": "Ime razreda: ",
     "WEEK": "Teden: ",
     "HOUR": "Ura",
-    "TO": " do "
+    "TO": " do ",
+    "NAME": "Ime posodobitve",
+    "DESCRIPTION": "Opis: ",
+    "OTA": "Čez-zrak Update",
+    "UPDATE": "Posodobi",
+    "UP_TO_DATE": "Program je že posodobljen ;-)",
+
+    "NOTE_UPDATE": "OPOZORILO: Ta posodobitev ki jo lahko prejmete ni nujno ista kot v tej omenjeni različici. Prenesena verzija morda nima DB Transitorja za trenutno verzijo. Posvetujte se z razvijalcem programske opreme ali pa testirajte prehod na razvijalskih napravah",
+    "UPDATE_SUCCESSFUL": "Posodobitev je bila uspešna",
+    "DANGER_ZONE": "Nevarna cona",
+    "DATABASE_EXPORT": "Izvoz sheme podatkov",
+    "OK": "OK",
+    "EXPORT": "Izvozi"
 }

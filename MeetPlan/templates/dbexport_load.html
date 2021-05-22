@@ -3,19 +3,10 @@
 {% block body %}
 <div class="w3-container">
 
-<h3>{{strings["NAME"]}}</h3>
-{{release["name"]}}
-
-<h3>{{strings["DESCRIPTION"]}}</h3>
-{{release["body"]}}
-
-<br><p></p><br>
-<form action="/update" method="POST">
-    <button type="submit" name="your_name" value="your_value" class="btn-link">{{strings["UPDATE"]}}</button>
+<form method="POST">
+    <b>{{strings["EXPORT"]}}?</b>
+    <button>{{strings["OK"]}}</button>
 </form>
-
-<br>
-<b>{{strings["NOTE_UPDATE"]}}</b>
 
 <br>
 
