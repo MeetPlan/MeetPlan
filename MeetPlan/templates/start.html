@@ -74,16 +74,6 @@ span.psw {
 
   <center><h2>{{strings["LOGIN"]}}</h2></center>
 
-{% with messages = get_flashed_messages() %}
-          {% if messages %}
-              {% for message in messages %}
-              <div class="bgflash">
-                {{ message }}
-              </div>
-              {% endfor %}
-          {% endif %}
-{% endwith %}
-
 <form action="/start" method="POST">
 
   <div class="container">

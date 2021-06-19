@@ -1,49 +1,75 @@
 # models.py
 
-from flask_login import UserMixin
-from . import db
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, create_engine
+from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
-    email = db.Column(db.String(100), unique=True)
-    username = db.Column(db.String(100), unique=True)
-    password = db.Column(db.String(100))
-    first_name = db.Column(db.String(100))
-    last_name = db.Column(db.String(100))
-    pmi = db.Column(db.String(100))
-    role = db.Column(db.String(100))
-    active = db.Column(db.Boolean)
-    confirmed = db.Column(db.Boolean)
-    meetings = db.relationship('Meetings', backref='user', lazy=True)
+from passlib.hash import bcrypt
 
-class Classes(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), unique=True)
-    meetings_classes = db.relationship('Meetings', backref='classes', lazy=True)
+SQLALCHEMY_DATABASE_URL = "sqlite:///db.sqlite"
 
-class MeetingGroup(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    meetingGroup = db.Column(db.String(100))
-    meetings = db.relationship('Meetings', backref='meetinggroup', lazy=True)
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+session = SessionLocal()
 
-class Meetings(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(100))
-    hour = db.Column(db.Integer)
-    required = db.Column(db.Boolean)
-    grading = db.Column(db.Boolean)
-    verifying = db.Column(db.Boolean)
-    description = db.Column(db.Text())
-    meetingApp = db.Column(db.String(100))
-    link = db.Column(db.String(1000))
-    teacher_id = db.Column(db.Integer)
-    name = db.Column(db.String(100))
-    meetingGroup = db.Column(db.String(100))
-    class_id = db.Column(db.Integer, db.ForeignKey(Classes.id))
-    teacher_id = db.Column(db.Integer, db.ForeignKey(User.id))
-    group_id = db.Column(db.Integer, db.ForeignKey(MeetingGroup.id))
+Base = declarative_base()
 
-class Values(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    value = db.Column(db.String(1000))
+class User(Base):
+    __tablename__ = "user"
+
+    id = Column(Integer, primary_key=True) # primary keys are required by SQLAlchemy
+    email = Column(String(100), unique=True)
+    username = Column(String(100), unique=True)
+    password = Column(String(100))
+    first_name = Column(String(100))
+    last_name = Column(String(100))
+    pmi = Column(String(100))
+    role = Column(String(100))
+    active = Column(Boolean)
+    confirmed = Column(Boolean)
+    meetings = relationship('Meetings', backref='user', lazy=True)
+
+    def verify_password(self, password):
+        return bcrypt.verify(password, self.password)
+
+class Classes(Base):
+    __tablename__ = "classes"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), unique=True)
+    meetings_classes = relationship('Meetings', backref='classes', lazy=True)
+
+class MeetingGroup(Base):
+    __tablename__ = "meetinggroup"
+
+    id = Column(Integer, primary_key=True)
+    meetingGroup = Column(String(100))
+    meetings = relationship('Meetings', backref='meetinggroup', lazy=True)
+
+class Meetings(Base):
+    __tablename__ = "meetings"
+
+    id = Column(Integer, primary_key=True)
+    date = Column(String(100))
+    hour = Column(Integer)
+    required = Column(Boolean)
+    grading = Column(Boolean)
+    verifying = Column(Boolean)
+    description = Column(Text())
+    meetingApp = Column(String(100))
+    link = Column(String(1000))
+    teacher_id = Column(Integer)
+    name = Column(String(100))
+    meetingGroup = Column(String(100))
+    class_id = Column(Integer, ForeignKey(Classes.id))
+    teacher_id = Column(Integer, ForeignKey(User.id))
+    group_id = Column(Integer, ForeignKey(MeetingGroup.id))
+
+class Values(Base):
+    __tablename__ = "values"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100))
+    value = Column(String(1000))

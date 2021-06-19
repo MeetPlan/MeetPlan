@@ -1,37 +1,74 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, abort
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import login_user, logout_user, login_required, login_fresh, current_user
-from .models import User
-from time import time
-from random import random, choice
-from . import db
-from .main import getStrings, getLang
-import requests
 import os
 import string
 import httpx
+import jwt
+import bcrypt
 
-auth = Blueprint('auth', __name__)
+from time import time
+from random import random, choice
+from datetime import timedelta
 
-@auth.route('/login')
-def login():
+from fastapi import APIRouter, Request, Depends, Form, Response
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from . import db
+from .main import getStrings, getLang
+from .functiondeclarations import login_required
+from .constants import *
+
+auth = APIRouter()
+
+@manager.user_loader
+def query_user(user_id: str):
+    """
+    Get a user from the db
+    :param user_id: E-Mail of the user
+    :return: None or the user object
+    """
+    return session.query(User).filter_by(email=user_id).first()
+
+def authenticate_user(username: str, password: str):
+    user = session.query(User).filter_by(username=username).first()
+    if not user:
+        return False 
+    if not user.verify_password(password):
+        return False
+    return user 
+
+@auth.post('/token')
+def generate_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = authenticate_user(form_data.username, form_data.password)
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, 
+            detail='Invalid username or password'
+        )
+
+    token = jwt.encode(user.__dict__, SECRET)
+
+    return {'access_token' : token, 'token_type' : 'bearer'}
+
+@auth.get('/login')
+def login(request: Request):
     lang = getLang().lower()
     strings = getStrings(lang)
 
-    return render_template('login.html', strings=strings)
+    return render_template('login.html', request=request, strings=strings)
 
-@auth.route('/login', methods=['POST'])
-def login_post():
+@auth.post('/login')
+def login_post(request: Request, data: OAuth2PasswordRequestForm = Depends()):
     lang = getLang().lower()
     strings = getStrings(lang)
 
-    email = request.form.get('uname')
-    password = request.form.get('psw')
+    email = data.username
+    password = data.password
 
-    user = User.query.filter_by(email=email).first()
+    user = session.query(User).filter_by(email=email).first()
     if not user:
         print("[login-system] User didn't use e-mail login. Trying to login with username")
-        user = User.query.filter_by(username=email).first()
+        user = session.query(User).filter_by(username=email).first()
         if not user:
             flash(strings["USER_NOT_EXISTS"])
             return redirect(url_for('auth.login'))
@@ -39,40 +76,47 @@ def login_post():
     print("[login-system] User used e-mail login")
 
     if user.confirmed == True or user.role == "admin":
-
-        # check if user actually exists
-        # take the user supplied password, hash it, and compare it to the hashed password in database
-        if not check_password_hash(user.password, password):
+        p = user.verify_password(password)
+        print(p)
+        if not p:
             flash(strings["WRONG_PASS"])
-            return redirect(url_for('auth.login')) # if user doesn't exist or password is wrong, reload the page
+            return redirect(request.url_for('login')) # if user doesn't exist or password is wrong, reload the page
 
         # if the above check passes, then we know the user has the right credentials
-        login_user(user)
-        return redirect(url_for('main.dashboard'))
+        access_token = manager.create_access_token(
+            data={'sub': user.email},
+            expires=timedelta(days=7)
+        )
+        #return {'token': access_token}
+
+        response = RedirectResponse(request.url_for("dashboard"), status_code=status.HTTP_303_SEE_OTHER)
+
+        
+        manager.set_cookie(response, access_token)
+        return response
     else:
         flash(strings["PENDING_VERIFICATION"])
-        return redirect(url_for("auth.login"))
+        return redirect(request.url_for("login"))
 
-@auth.route('/start')
-def start():
+@auth.get('/start')
+def start(request: Request):
     lang = getLang().lower()
     strings = getStrings(lang)
 
-    return render_template('start.html', strings=strings)
+    return render_template('start.html', request=request, strings=strings)
 
-@auth.route('/start', methods=['POST'])
-def start_post():
+@auth.post('/start')
+def start_post(request: Request, email: str = Form(...), uname: str = Form(...), fname: str = Form(...), lname: str = Form(...), psw: str = Form(...)):
     lang = getLang().lower()
     strings = getStrings(lang)
 
-    email = request.form.get('email')
-    username = request.form.get('uname')
-    first_name = request.form.get('fname')
-    last_name = request.form.get('lname')
-    password = request.form.get('psw')
+    username = uname
+    first_name = fname
+    last_name = lname
+    password = psw
     active = True
 
-    user = User.query.all()
+    user = session.query(User).all()
     if (user):
         role = "student"
     else:
@@ -85,36 +129,37 @@ def start_post():
 
     if email == "" or first_name == "" or last_name == "" or password == "":
         flash(strings["ALL_FIELDS"])
-        return redirect(url_for('auth.start'))
+        return redirect(request.url_for('auth.start'))
 
-    user = User.query.filter_by(email=email).first()
-    usernme = User.query.filter_by(username=username).first() # if this returns a user, then the email already exists in database
+    user = session.query(User).filter_by(email=email).first()
+    usernme = session.query(User).filter_by(username=username).first() # if this returns a user, then the email already exists in database
 
     if user: # if a user is found, we want to redirect back to signup page so user can try again
         flash(strings["USER_EMAIL_EXISTS"])
-        return redirect(url_for('auth.start'))
+        return redirect(request.url_for('start'))
     elif usernme: # if a user is found, we want to redirect back to signup page so user can try again
         flash(strings["USER_USERNAME_EXISTS"])
-        return redirect(url_for('auth.start'))
+        return redirect(request.url_for('start'))
 
     # create new user with the form data. Hash the password so plaintext version isn't saved.
     new_user = User(email=email, username=username, first_name=first_name, last_name=last_name,
-        password=generate_password_hash(password, method='sha256'), role=role, active=active, confirmed=confirmed)
+        password=bcrypt.hash(password), role=role, active=active, confirmed=confirmed)
 
-    db.session.add(new_user)
-    db.session.commit()
+    session.add(new_user)
+    session.commit()
 
-    return redirect(url_for('auth.login'))
+    return redirect(request.url_for('login'))
 
 @auth.route('/logout')
 @login_required
-def logout():
-    logout_user()
-    return redirect(url_for('auth.login'))
+def logout(request: Request, current_user = Depends(manager)):
+    response = redirect(request.url_for('login'))
+    response.delete_cookie("login")
+    return response
 
 """
 @auth.route('/profile', methods=['POST'])
-def profile_update():
+def profile_update(request: Request):
     email = request.form.get('email')
     username = request.form.get('uname')
     first_name = request.form.get('first_name')
@@ -141,7 +186,7 @@ def profile_update():
 
     #db.session.profile_update(new_user)
     print(username)
-    user = User.query.filter_by(id=current_user.id).first()
+    user = User.query.filter_by(id=request.state.user.id).first()
     user.first_name = first_name
     user.username = username
     user.last_name = last_name
@@ -150,4 +195,4 @@ def profile_update():
         user.password = generate_password_hash(new_password, method='sha256')
     db.session.commit()
 
-    return redirect(url_for('main.profile'))"""
+    return redirect(request.url_for('main.profile'))"""

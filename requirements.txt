@@ -1,7 +1,11 @@
-flask
-flask-login
-flask-sqlalchemy
-SQLAlchemy==1.3.23
-python-dotenv
-requests
+fastapi
+fastapi-login
+SQLAlchemy
 httpx
+uvicorn
+passlib
+jinja2
+aiofiles
+python-multipart
+pyjwt
+bcrypt

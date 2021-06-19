@@ -1,6 +1,6 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='css/w3css/w3.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='fonts/Raleway.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/fontawesome5/css/all.css') }}">
+<link rel="stylesheet" href="{{ request.url_for('static', path='css/w3css/w3.css') }}">
+<link rel="stylesheet" href="{{ request.url_for('static', path='fonts/Raleway.css') }}">
+<link rel="stylesheet" href="{{ request.url_for('static', path='css/fontawesome5/css/all.css') }}">
 <body  onload="window.print();">
 <style>
 html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}

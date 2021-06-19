@@ -74,24 +74,14 @@ span.psw {
 
 <center><h2>{{strings["LOGIN"]}}</h2></center>
 
-{% with messages = get_flashed_messages() %}
-          {% if messages %}
-              {% for message in messages %}
-              <div class="bgflash">
-                {{ message }}
-              </div>
-              {% endfor %}
-          {% endif %}
-{% endwith %}
-
 <form action="/login" method="POST">
 
   <div class="container">
-    <label for="uname"><b>{{strings["USERNAME"]}}</b></label>
-    <input type="text" placeholder="{{strings['ENTER_USERNAME']}}" name="uname" required>
+    <label for="username"><b>{{strings["USERNAME"]}}</b></label>
+    <input type="text" placeholder="{{strings['ENTER_USERNAME']}}" name="username" required>
 
-    <label for="psw"><b>{{strings["PASSWORD"]}}</b></label>
-    <input type="password" placeholder="{{strings['ENTER_PASSWORD']}}" name="psw" required>
+    <label for="password"><b>{{strings["PASSWORD"]}}</b></label>
+    <input type="password" placeholder="{{strings['ENTER_PASSWORD']}}" name="password" required>
         
     <button type="submit">{{strings['LOGIN']}}</button>
   </div>

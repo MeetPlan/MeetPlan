@@ -35,8 +35,8 @@ function displayURL(meetingApp)
 <input type="date" id="date" name="date" value="{{date}}" required></input>
 
 <br><p></p><br>
-<label for="class">{{strings['PICK_A_CLASS']}}</label>
-<select id="class" name="class" value="{{className}}">
+<label for="classname">{{strings['PICK_A_CLASS']}}</label>
+<select id="classname" name="classname" value="{{className}}">
 {% for class in classes %}
   <option value="{{ class.name }}">{{ class.name }}</option>
 {% endfor %}

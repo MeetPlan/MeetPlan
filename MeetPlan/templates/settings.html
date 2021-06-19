@@ -9,13 +9,13 @@
 <p></p>
 {{strings['PICK_A_LANG']}}<br>
 <input type="radio" id="en-US" name="lang" value="en-US" required>
-<label for="en-US">English (USA) &nbsp; <img src="{{ url_for('static', filename='flags/us-flag.png')}}" height=20></label><br>
+<label for="en-US">English (USA) &nbsp; <img src="{{ url_for('static', path='flags/us-flag.png')}}" height=20></label><br>
 <input type="radio" id="sl-SI" name="lang" value="sl-SI">
-<label for="sl-SI">slovenščina (Slovenija) &nbsp; <img src="{{ url_for('static', filename='flags/sl-flag.png')}}" height=20></label><br>
+<label for="sl-SI">slovenščina (Slovenija) &nbsp; <img src="{{ url_for('static', path='flags/sl-flag.png')}}" height=20></label><br>
 
 <p></p>
 <label for="max">{{strings['PICK_A_MAX']}}</label>
-<input type="number" id="max" name="max" value="{{max}}" max="15" required>
+<input type="number" id="maxmeet" name="maxmeet" value="{{max}}" max="15" required>
 
 <br>
 <input type="submit" name="submit" value="{{strings['SEND']}}">

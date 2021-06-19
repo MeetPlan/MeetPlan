@@ -1,11 +1,11 @@
-from flask import *
-from flask_login import login_user, logout_user, login_required, login_fresh, current_user
 from .models import *
 from .tableutil import *
 from werkzeug.security import check_password_hash
 import os
 
-api = Blueprint('api', __name__)
+from fastapi import APIRouter
+
+api = APIRouter()
 
 """
     username = request.values.get('username')
@@ -53,7 +53,7 @@ def loginUser(email, password):
     return json
 
 @api.route("/api/translations")
-def getTranslations():
+def getTranslations(request: Request):
     value = Values.query.filter_by(name="lang").first()
     if value:
         val = value.value
@@ -70,7 +70,7 @@ def getTranslations():
     return jsonify(strings)
 
 @api.route("/api/timetable", methods = ['GET'])
-def getTable():
+def getTable(request: Request):
     classname = request.values.get('class')
 
     username = request.values.get('username')
@@ -88,7 +88,7 @@ def getTable():
             return "403", 403
 
 @api.route("/api/user")
-def getUserInfo():
+def getUserInfo(request: Request):
     username = request.values.get('username')
     password = request.values.get('password')
 
@@ -102,7 +102,7 @@ def getUserInfo():
             return jsonify(user), 403
 
 @api.route("/api/classes")
-def getAllClasses():
+def getAllClasses(request: Request):
     username = request.values.get('username')
     password = request.values.get('password')
 
@@ -117,7 +117,7 @@ def getAllClasses():
         else:
             return "403", 403
 
-@api.route("/api/meeting/<int:id>")
+@api.route("/api/meeting/{int:id}")
 def getMeeting(id):
     username = request.values.get('username')
     password = request.values.get('password')

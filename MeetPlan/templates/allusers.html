@@ -30,7 +30,7 @@
             <td> {{user.first_name}}</td>
             <td> {{user.last_name}}</td>
             <td> {{user.role}}</td>
-            {% if current_user.username != user.username %}
+            {% if request.state.user.username != user.username %}
               <td><a href="/decline/{{user.id}}">{{strings["KICK"]}}</a></td>
               <td><a href="/demote/{{user.id}}">{{strings["DEMOTE"]}}</a></td>
               <td><a href="/promote/teacher/{{user.id}}">{{strings["PROMOTE_TO_TEACHER"]}}</a></td>

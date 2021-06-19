@@ -5,7 +5,7 @@
 
 <script>
 function selectClass(classname) {
-  var classname2 = '?class=' + classname.value;
+  var classname2 = '?classname=' + classname.value;
   console.log(classname2)
   self.location = classname2;
 }
@@ -24,7 +24,7 @@ function selectClass(classname) {
 
 {% if classname %}
   <br>
-  <a href="/print?class={{classname}}"><i class="fas fa-print"></i></a>
+  <a href="/print?classname={{classname}}"><i class="fas fa-print"></i></a>
 {% endif %}
 
 <script>

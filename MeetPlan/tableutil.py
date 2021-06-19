@@ -2,11 +2,12 @@ from .utils import *
 from .models import Meetings, Classes, MeetingGroup
 from .emptyobject import EmptyObject
 from .objects import MeetingGroupObject
+from .db import session
 
 def getOrderedList(classname):
     week = getWeekList(getDate())
 
-    classname = Classes.query.filter_by(name=classname).first()
+    classname = session.query(Classes).filter_by(name=classname).first()
 
     mon = []
     tue = []
@@ -19,11 +20,11 @@ def getOrderedList(classname):
     for i in week:
         for i2 in range(9):
             #print(i2)
-            meeting = Meetings.query.filter_by(date=i, hour=i2, class_id=classname.id).all()
+            meeting = session.query(Meetings).filter_by(date=i, hour=i2, class_id=classname.id).all()
             if meeting:
                 if len(meeting) > 1:
                     print(meeting[0].group_id)
-                    group = MeetingGroup.query.filter_by(meetingGroup=meeting[0].group_id).first()
+                    group = session.query(MeetingGroup).filter_by(meetingGroup=meeting[0].group_id).first()
                     if index == 0:
                         mon.append(MeetingGroupObject(meeting[0], group.meetingGroup))
                     elif index == 1:
@@ -91,12 +92,12 @@ def getOrderedListAPI(classname):
     for i in week:
         for i2 in range(9):
             #print(i2)
-            classes = Classes.query.filter_by(name=classname).first()
-            meeting = Meetings.query.filter_by(date=i, hour=i2, class_id=classes.id).all()
+            classes = session.query(Classes).filter_by(name=classname).first()
+            meeting = session.query(Meetings).filter_by(date=i, hour=i2, class_id=classes.id).all()
             if meeting:
                 if len(meeting) > 1:
                     for meetin in meeting:
-                        group = MeetingGroup.query.filter_by(meetingGroup=meetin.group_id).first()
+                        group = session.query(MeetingGroup).filter_by(meetingGroup=meetin.group_id).first()
                         json = {
                             "name": group.meetingGroup,
                             "id": meetin.id,
