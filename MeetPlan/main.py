@@ -486,7 +486,7 @@ def meetingAddPost():
                 index += 1
         print(index)
 
-        if index > maximum:
+        if index >= maximum:
             flash(strings["MAXIMUM_EXCEEDED"])
             return redirect(url_for("main.meetingAdd"))
 
