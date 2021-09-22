@@ -90,5 +90,8 @@
     "DANGER_ZONE": "Nevarna cona",
     "DATABASE_EXPORT": "Izvoz sheme podatkov",
     "OK": "OK",
-    "EXPORT": "Izvozi"
+    "EXPORT": "Izvozi",
+
+    "ADMIN_BLOCKED_REGISTRATION": "Administrator je blokiral vse registracije",
+    "BLOCK_REGISTRATIONS": "Blokiraj registracije"
 }

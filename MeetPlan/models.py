@@ -36,7 +36,7 @@ class Meetings(db.Model):
     description = db.Column(db.Text())
     meetingApp = db.Column(db.String(100))
     link = db.Column(db.String(1000))
-    teacher_id = db.Column(db.Integer)
+    #teacher_id = db.Column(db.Integer)
     name = db.Column(db.String(100))
     meetingGroup = db.Column(db.String(100))
     class_id = db.Column(db.Integer, db.ForeignKey(Classes.id))

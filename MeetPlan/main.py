@@ -650,17 +650,19 @@ def settings():
     lang = getLang().lower()
     strings = getStrings(lang)
 
-    if (current_user.role == "admin"):
-        return render_template("settings.html", strings=strings, name=current_user.first_name, role=current_user.role, max=getMax())
+    if current_user.role == "admin":
+        q = Values.query.filter_by(name="blockregistration").first().value
+        return render_template("settings.html", strings=strings, name=current_user.first_name, role=current_user.role, max=getMax(), blockregister=q, lang=lang)
     else:
         abort(403)
 
 @main.route("/settings", methods=["POST"])
 @login_required
 def settingsPost():
-    if (current_user.role == "admin"):
+    if current_user.role == "admin":
         lang = request.form.get('lang')
         maxmeet = request.form.get('max')
+        blockregister = request.form.get("blockregister")
 
         max2 = getMax()
         max3 = Values.query.filter_by(name="max").first()
@@ -668,6 +670,14 @@ def settingsPost():
 
         val = Values.query.filter_by(name="lang").first()
         val.value = lang
+
+        blockr = Values.query.filter_by(name="blockregistration").first()
+        if blockregister is None:
+            blockregister = "0"
+        else:
+            blockregister = "1"
+        blockr.value = blockregister
+
         db.session.commit()
         return redirect(url_for("main.settings"))
     else:

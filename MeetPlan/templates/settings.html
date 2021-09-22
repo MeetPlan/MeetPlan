@@ -8,9 +8,9 @@
 <form method="POST">
 <p></p>
 {{strings['PICK_A_LANG']}}<br>
-<input type="radio" id="en-US" name="lang" value="en-US" required>
+<input type="radio" id="en-US" name="lang" value="en-US" required {% if lang == "en-us" %}checked{% endif %}>
 <label for="en-US">English (USA) &nbsp; <img src="{{ url_for('static', filename='flags/us-flag.png')}}" height=20></label><br>
-<input type="radio" id="sl-SI" name="lang" value="sl-SI">
+<input type="radio" id="sl-SI" name="lang" value="sl-SI" {% if lang == "sl-si" %}checked{% endif %}>
 <label for="sl-SI">slovenščina (Slovenija) &nbsp; <img src="{{ url_for('static', filename='flags/sl-flag.png')}}" height=20></label><br>
 
 <p></p>
@@ -18,8 +18,13 @@
 <input type="number" id="max" name="max" value="{{max}}" max="15" required>
 
 <br>
+<label for="blockregister">{{strings['BLOCK_REGISTRATIONS']}}</label>
+<input type="checkbox" id="blockregister" name="blockregister" {% if blockregister == "1" %}checked{% endif %}>
+
+<br>
 <input type="submit" name="submit" value="{{strings['SEND']}}">
 </form>
+</div>
 
 <script>
 // Get the Sidebar

@@ -1,15 +1,9 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, login_fresh, current_user
-from .models import User
-from time import time
-from random import random, choice
+from .models import User, Values
 from . import db
 from .main import getStrings, getLang
-import requests
-import os
-import string
-import httpx
 
 auth = Blueprint('auth', __name__)
 
@@ -55,56 +49,73 @@ def login_post():
 
 @auth.route('/start')
 def start():
+    q = Values.query.filter_by(name="blockregistration").first()
+    if q is None:
+        q = Values(name="blockregistration", value="0")
+        db.session.add(q)
+        db.session.commit()
     lang = getLang().lower()
     strings = getStrings(lang)
-
-    return render_template('start.html', strings=strings)
+    if q.value == "0":
+        return render_template('start.html', strings=strings)
+    else:
+        flash(strings["ADMIN_BLOCKED_REGISTRATION"])
+        return render_template("login.html", strings=strings)
 
 @auth.route('/start', methods=['POST'])
 def start_post():
+    q = Values.query.filter_by(name="blockregistration").first()
+    if q is None:
+        q = Values(name="blockregistration", value="False")
+        db.session.add(q)
+        db.session.commit()
+        q = Values.query.filter_by(name="blockregistration").first()
     lang = getLang().lower()
     strings = getStrings(lang)
+    if q.value == "0":
+        email = request.form.get('email')
+        username = request.form.get('uname')
+        first_name = request.form.get('fname')
+        last_name = request.form.get('lname')
+        password = request.form.get('psw')
+        active = True
 
-    email = request.form.get('email')
-    username = request.form.get('uname')
-    first_name = request.form.get('fname')
-    last_name = request.form.get('lname')
-    password = request.form.get('psw')
-    active = True
+        user = User.query.all()
+        if (user):
+            role = "student"
+        else:
+            role = "admin"
 
-    user = User.query.all()
-    if (user):
-        role = "student"
+        if (role == "admin"):
+            confirmed = True
+        else:
+            confirmed = False
+
+        if email == "" or first_name == "" or last_name == "" or password == "":
+            flash(strings["ALL_FIELDS"])
+            return redirect(url_for('auth.start'))
+
+        user = User.query.filter_by(email=email).first()
+        usernme = User.query.filter_by(username=username).first() # if this returns a user, then the email already exists in database
+
+        if user: # if a user is found, we want to redirect back to signup page so user can try again
+            flash(strings["USER_EMAIL_EXISTS"])
+            return redirect(url_for('auth.start'))
+        elif usernme: # if a user is found, we want to redirect back to signup page so user can try again
+            flash(strings["USER_USERNAME_EXISTS"])
+            return redirect(url_for('auth.start'))
+
+        # create new user with the form data. Hash the password so plaintext version isn't saved.
+        new_user = User(email=email, username=username, first_name=first_name, last_name=last_name,
+            password=generate_password_hash(password, method='sha256'), role=role, active=active, confirmed=confirmed)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect(url_for('auth.login'))
     else:
-        role = "admin"
-
-    if (role == "admin"):
-        confirmed = True
-    else:
-        confirmed = False
-
-    if email == "" or first_name == "" or last_name == "" or password == "":
-        flash(strings["ALL_FIELDS"])
-        return redirect(url_for('auth.start'))
-
-    user = User.query.filter_by(email=email).first()
-    usernme = User.query.filter_by(username=username).first() # if this returns a user, then the email already exists in database
-
-    if user: # if a user is found, we want to redirect back to signup page so user can try again
-        flash(strings["USER_EMAIL_EXISTS"])
-        return redirect(url_for('auth.start'))
-    elif usernme: # if a user is found, we want to redirect back to signup page so user can try again
-        flash(strings["USER_USERNAME_EXISTS"])
-        return redirect(url_for('auth.start'))
-
-    # create new user with the form data. Hash the password so plaintext version isn't saved.
-    new_user = User(email=email, username=username, first_name=first_name, last_name=last_name,
-        password=generate_password_hash(password, method='sha256'), role=role, active=active, confirmed=confirmed)
-
-    db.session.add(new_user)
-    db.session.commit()
-
-    return redirect(url_for('auth.login'))
+        flash(strings["ADMIN_BLOCKED_REGISTRATION"])
+        return redirect(url_for("auth.login"))
 
 @auth.route('/logout')
 @login_required

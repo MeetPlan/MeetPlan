@@ -83,5 +83,7 @@
     "CLASSNAME": "Classname: ",
     "WEEK": "Week: ",
     "HOUR": "Hour",
-    "TO": " to "
+    "TO": " to ",
+    "ADMIN_BLOCKED_REGISTRATION": "Administrator has blocked all registrations",
+    "BLOCK_REGISTRATIONS": "Block all registrations"
 }
