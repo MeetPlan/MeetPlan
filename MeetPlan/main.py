@@ -541,8 +541,8 @@ def meetingAddPost():
         if index >= maximum:
             flash(strings["MAXIMUM_EXCEEDED"])
             return redirect(url_for("main.meetingAdd"))
-
-        if ifmeeting and ifmeeting[0].group_id != group:
+        
+        if ifmeeting and ifmeeting[0].group_id != groupid:
             flash(strings["ALREADY_RESERVED"])
             return redirect(url_for("main.meetingAdd"))
 
