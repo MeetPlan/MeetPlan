@@ -237,6 +237,7 @@ def meetingEdit(id):
 
     meeting = Meetings.query.filter_by(id=id).first()
     print(meeting.meetingApp)
+    class1 = Classes.query.filter_by(id=meeting.class_id).first()
     if meeting:
         if current_user.role == "admin" or current_user.id == meeting.teacher_id:
             return render_template("addmeeting.html",
@@ -246,7 +247,7 @@ def meetingEdit(id):
                 classes = Classes.query.all(),
                 meetingName = meeting.name,
                 date = meeting.date,
-                className = meeting.className,
+                className = class1.name,
                 meetingHour = str(meeting.hour),
                 strings = strings
             ), 200
@@ -557,17 +558,29 @@ def meetingEditPost(id):
             date = request.form.get('date')
             hour = request.form.get('hour')
             link = request.form.get('urlID')
+            pmi = request.form.get("pmi")
             print(classname)
             print(date)
 
-            ifmeeting = Meetings.query.filter_by(date=date, hour=hour, className=classname).all()
+            className = Classes.query.filter_by(name=classname).first()
+
+            ifmeeting = Meetings.query.filter_by(date=date, hour=hour, class_id=className.id).all()
             lang = getLang().lower()
             strings = getStrings(lang)
 
-            if ifmeeting:
+            ok = False
+            for i in ifmeeting:
+                # Here is a problem
+                # Other teacher in group could probably edit it.
+                # I will fix this as soon as possible
+                if i.teacher_id == current_user.id or current_user.admin:
+                    ok = True
+            if not ok:
                 flash(strings["ALREADY_RESERVED"])
                 return redirect(url_for("main.meetingAdd"))
 
+            if pmi == "yes":
+                link = current_user.pmi
             if (app == "zoom"):
                 link = "https://zoom.us/j/"+link
             elif (app == "gmeet"):
