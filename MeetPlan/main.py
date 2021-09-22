@@ -13,12 +13,13 @@ main = Blueprint('main', __name__)
 
 def getStrings(lang):
     SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
-    json_url = os.path.join(SITE_ROOT, 'static', 'langs', lang+'.json')
+    json_url = os.path.join(SITE_ROOT, 'static', 'langs', lang + '.json')
     if sys.version_info <= (3, 8):
         print("Running at 3.8 or lower")
         return json.loads(open(json_url, encoding="utf-8").read(), encoding="utf-8")
     else:
         return json.loads(open(json_url, encoding="utf-8").read())
+
 
 def getLang():
     value = Values.query.filter_by(name="lang").first()
@@ -30,6 +31,7 @@ def getLang():
         db.session.commit()
         return val.value
 
+
 def getMax():
     value = Values.query.filter_by(name="max").first()
     if value:
@@ -40,6 +42,7 @@ def getMax():
         db.session.commit()
         return val.value
 
+
 """
 @main.route("/oobe", methods = ['POST', 'GET'])
 def oobe():
@@ -48,7 +51,8 @@ def oobe():
     return render_template("oobe.html")
 """
 
-@main.route("/", methods = ['GET', 'POST'])
+
+@main.route("/", methods=['GET', 'POST'])
 @login_required
 def dashboard():
     classname = request.values.get('class')
@@ -56,45 +60,63 @@ def dashboard():
     lang = getLang().lower()
     strings = getStrings(lang)
 
-    #print(classname)
+    # print(classname)
     current_date = getDate()
     weeks = getWeekList(current_date)
+    isWeekend = False
+    weekend = weeks[5:]
+    nextweekday = current_date + timedelta(days=7)
+    nextweek = getWeekList(nextweekday)
+    date = str(current_date).split(" ")[0]
+    if date in weekend or current_user.role == "teacher" or current_user.role == "admin":
+        isWeekend = True
     if (current_user.role == "admin" or current_user.role == "teacher"):
         isTeacher = "true"
     else:
         isTeacher = "false"
     if classname:
         urnik = getOrderedList(classname)
-        return render_template("dashboard.html", name=current_user.first_name, classes=Classes.query.all(), role=current_user.role,
-            mon=urnik["mon"],
-            tue=urnik["tue"],
-            wed=urnik["wed"],
-            thu=urnik["thu"],
-            fri=urnik["fri"],
-            sat=urnik["sat"],
-            dates = weeks,
-            isTeacher = isTeacher,
-            strings = strings,
-            classname=classname
-        )
+        urniknext = getOrderedList(classname, week=nextweek)
+        return render_template("dashboard.html", name=current_user.first_name, classes=Classes.query.all(),
+                               role=current_user.role,
+                               mon=urnik["mon"],
+                               tue=urnik["tue"],
+                               wed=urnik["wed"],
+                               thu=urnik["thu"],
+                               fri=urnik["fri"],
+                               sat=urnik["sat"],
+                               dates=weeks,
+                               isTeacher=isTeacher,
+                               strings=strings,
+                               classname=classname,
+                               isWeekend=isWeekend,
+                               monnext=urniknext["mon"],
+                               tuenext=urniknext["tue"],
+                               wednext=urniknext["wed"],
+                               thunext=urniknext["thu"],
+                               frinext=urniknext["fri"],
+                               satnext=urniknext["sat"],
+                               nextdates=nextweek
+                               )
     else:
         flash(strings["SELECT_CLASS"])
 
         return render_template("dashboard.html",
-            name=current_user.first_name,
-            classes=Classes.query.all(),
-            mon=generateEmptyList(), 
-            tue=generateEmptyList(),
-            wed=generateEmptyList(),
-            thu=generateEmptyList(),
-            fri=generateEmptyList(),
-            sat=generateEmptyList(),
-            role=current_user.role,
-            dates=weeks,
-            isTeacher=isTeacher,
-            strings=strings,
-            classname=None
-        )
+                               name=current_user.first_name,
+                               classes=Classes.query.all(),
+                               mon=generateEmptyList(),
+                               tue=generateEmptyList(),
+                               wed=generateEmptyList(),
+                               thu=generateEmptyList(),
+                               fri=generateEmptyList(),
+                               sat=generateEmptyList(),
+                               role=current_user.role,
+                               dates=weeks,
+                               isTeacher=isTeacher,
+                               strings=strings,
+                               classname=None
+                               )
+
 
 @main.route("/print")
 @login_required
@@ -113,34 +135,35 @@ def printTable():
         if bare == "true":
             print("True")
             urnik = getOrderedList(classname)
-        
+
             return render_template("bareprint.html",
-                    mon=urnik["mon"],
-                    tue=urnik["tue"],
-                    wed=urnik["wed"],
-                    thu=urnik["thu"],
-                    fri=urnik["fri"],
-                    sat=urnik["sat"],
-                    dates = weeks,
-                    strings = strings
-                )
+                                   mon=urnik["mon"],
+                                   tue=urnik["tue"],
+                                   wed=urnik["wed"],
+                                   thu=urnik["thu"],
+                                   fri=urnik["fri"],
+                                   sat=urnik["sat"],
+                                   dates=weeks,
+                                   strings=strings
+                                   )
         else:
             urnik = getOrderedList(classname)
-        
+
             return render_template("print.html",
-                    mon=urnik["mon"],
-                    tue=urnik["tue"],
-                    wed=urnik["wed"],
-                    thu=urnik["thu"],
-                    fri=urnik["fri"],
-                    sat=urnik["sat"],
-                    dates = weeks,
-                    strings = strings,
-                    classname=classname,
-                    week=weeks[0]+strings["TO"]+weeks[-1]
-                )
+                                   mon=urnik["mon"],
+                                   tue=urnik["tue"],
+                                   wed=urnik["wed"],
+                                   thu=urnik["thu"],
+                                   fri=urnik["fri"],
+                                   sat=urnik["sat"],
+                                   dates=weeks,
+                                   strings=strings,
+                                   classname=classname,
+                                   week=weeks[0] + strings["TO"] + weeks[-1]
+                                   )
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
+
 
 @main.route("/class/add", methods=["GET"])
 @login_required
@@ -149,9 +172,11 @@ def addClass():
         lang = getLang().lower()
         strings = getStrings(lang)
 
-        return render_template("addclass.html", classes = Classes.query.all(), role=current_user.role, name=current_user.first_name, strings=strings)
+        return render_template("addclass.html", classes=Classes.query.all(), role=current_user.role,
+                               name=current_user.first_name, strings=strings)
     else:
         abort(403)
+
 
 @main.route("/class/add", methods=["POST"])
 @login_required
@@ -166,6 +191,7 @@ def addClassPost():
     else:
         abort(403)
 
+
 @main.route("/group/add", methods=["GET"])
 @login_required
 def addGroup():
@@ -173,9 +199,11 @@ def addGroup():
         lang = getLang().lower()
         strings = getStrings(lang)
 
-        return render_template("addmeetinggroups.html", groups = MeetingGroup.query.all(), role=current_user.role, name=current_user.first_name, strings=strings)
+        return render_template("addmeetinggroups.html", groups=MeetingGroup.query.all(), role=current_user.role,
+                               name=current_user.first_name, strings=strings)
     else:
         abort(403)
+
 
 @main.route("/group/add", methods=["POST"])
 @login_required
@@ -190,6 +218,7 @@ def addGroupPost():
     else:
         abort(403)
 
+
 @login_required
 @main.route("/meeting/picker", methods=["GET"])
 def meetingPicker():
@@ -203,13 +232,14 @@ def meetingPicker():
     current_date = getDate()
     weeks = getWeekList(current_date)
     return render_template("meetingpicker.html",
-        mon=[], tue=[], wed=[], thu=[], fri=[], sat=[],
-        role=current_user.role, name=current_user.first_name,
-        classes = Classes.query.all(),
-        isTeacher = isTeacher,
-        dates = weeks,
-        strings = strings
-    )
+                           mon=[], tue=[], wed=[], thu=[], fri=[], sat=[],
+                           role=current_user.role, name=current_user.first_name,
+                           classes=Classes.query.all(),
+                           isTeacher=isTeacher,
+                           dates=weeks,
+                           strings=strings
+                           )
+
 
 @main.route("/meeting/add", methods=["GET"])
 @login_required
@@ -219,15 +249,16 @@ def meetingAdd():
 
     if current_user.role == "admin" or current_user.role == "teacher":
         return render_template("addmeeting.html",
-            mon=[], tue=[], wed=[], thu=[], fri=[], sat=[],
-            role=current_user.role,
-            name=current_user.first_name,
-            classes = Classes.query.all(),
-            strings = strings,
-            groups=MeetingGroup.query.all()
-        ), 200
+                               mon=[], tue=[], wed=[], thu=[], fri=[], sat=[],
+                               role=current_user.role,
+                               name=current_user.first_name,
+                               classes=Classes.query.all(),
+                               strings=strings,
+                               groups=MeetingGroup.query.all()
+                               ), 200
     else:
         abort(403)
+
 
 @main.route("/meeting/edit/<int:id>", methods=["GET"])
 @login_required
@@ -241,20 +272,21 @@ def meetingEdit(id):
     if meeting:
         if current_user.role == "admin" or current_user.id == meeting.teacher_id:
             return render_template("addmeeting.html",
-                mon=[], tue=[], wed=[], thu=[], fri=[], sat=[],
-                role=current_user.role,
-                name=current_user.first_name,
-                classes = Classes.query.all(),
-                meetingName = meeting.name,
-                date = meeting.date,
-                className = class1.name,
-                meetingHour = str(meeting.hour),
-                strings = strings
-            ), 200
+                                   mon=[], tue=[], wed=[], thu=[], fri=[], sat=[],
+                                   role=current_user.role,
+                                   name=current_user.first_name,
+                                   classes=Classes.query.all(),
+                                   meetingName=meeting.name,
+                                   date=meeting.date,
+                                   className=class1.name,
+                                   meetingHour=str(meeting.hour),
+                                   strings=strings
+                                   ), 200
         else:
             abort(403)
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
+
 
 @main.route("/approve/<int:id>", methods=["GET"])
 @login_required
@@ -273,6 +305,7 @@ def approveUser(id):
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
 
+
 @main.route("/user/settings", methods=["GET"])
 @login_required
 def userSettings():
@@ -287,6 +320,7 @@ def userSettings():
         role=current_user.role
     )
 
+
 @main.route("/user/settings", methods=["POST"])
 @login_required
 def userSettingsPost():
@@ -295,6 +329,7 @@ def userSettingsPost():
     user.pmi = pmi
     db.session.commit()
     return redirect(url_for("main.userSettings"))
+
 
 @main.route("/promote/<role>/<int:id>", methods=["GET"])
 @login_required
@@ -319,6 +354,7 @@ def promoteUser(role, id):
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
 
+
 @main.route("/demote/<int:id>", methods=["GET"])
 @login_required
 def demoteUser(id):
@@ -336,6 +372,7 @@ def demoteUser(id):
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
 
+
 @main.route("/decline/<int:id>", methods=["GET"])
 @login_required
 def declineUser(id):
@@ -352,6 +389,7 @@ def declineUser(id):
             abort(403)
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
+
 
 @main.route("/delete/meeting/<int:id>", methods=["GET"])
 @login_required
@@ -371,6 +409,7 @@ def deleteMeeting(id):
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
 
+
 @main.route("/group/view/<int:id>", methods=["GET", "POST"])
 @login_required
 def groupView(id):
@@ -382,20 +421,23 @@ def groupView(id):
     print(classname)
     if meeting:
         weeklist = getWeekList(getDate())
-        #print(weeklist)
-        #print(meeting.date)
+        # print(weeklist)
+        # print(meeting.date)
         if (meeting.date in weeklist or current_user.role == "teacher" or current_user.role == "admin"):
             if meeting.group_id:
                 print("Meeting has a Group ID")
-                meeting = Meetings.query.filter_by(date=meeting.date, group_id=meeting.group_id, hour=meeting.hour).all()
+                meeting = Meetings.query.filter_by(date=meeting.date, group_id=meeting.group_id,
+                                                   hour=meeting.hour).all()
                 print(meeting[0].group_id)
-                return render_template("groupview.html", meetings=meeting, strings=strings, role=current_user.role, name=current_user.first_name)
+                return render_template("groupview.html", meetings=meeting, strings=strings, role=current_user.role,
+                                       name=current_user.first_name)
             else:
                 return redirect(url_for("main.meetingView"))
         else:
             abort(403)
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
+
 
 @main.route("/meeting/view/<int:id>", methods=["GET"])
 @login_required
@@ -410,22 +452,26 @@ def meetingView(id):
     print(classname)
     if meeting:
         weeklist = getWeekList(getDate())
-        #print(weeklist)
-        #print(meeting.date)
+        # print(weeklist)
+        # print(meeting.date)
         if (meeting.date in weeklist or current_user.role == "teacher" or current_user.role == "admin"):
             print(continue2)
             if continue2 == "true":
-                return render_template("meetingview.html", meeting=meeting, strings=strings, name=current_user.first_name, role=current_user.role, className=classname.name)
+                return render_template("meetingview.html", meeting=meeting, strings=strings,
+                                       name=current_user.first_name, role=current_user.role, className=classname.name)
             if meeting.group_id:
                 print("Meeting has a Group ID")
-                meeting = Meetings.query.filter_by(date=meeting.date, group_id=meeting.group_id, hour=meeting.hour).all()
+                meeting = Meetings.query.filter_by(date=meeting.date, group_id=meeting.group_id,
+                                                   hour=meeting.hour).all()
                 return redirect(url_for("main.groupView", id=id))
             else:
-                return render_template("meetingview.html", meeting=meeting, strings=strings, name=current_user.first_name, role=current_user.role, className=classname.name)
+                return render_template("meetingview.html", meeting=meeting, strings=strings,
+                                       name=current_user.first_name, role=current_user.role, className=classname.name)
         else:
             abort(403)
     else:
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
+
 
 @main.route("/meeting/add", methods=["POST"])
 @login_required
@@ -496,9 +542,9 @@ def meetingAddPost():
             return redirect(url_for("main.meetingAdd"))
 
         if (app == "zoom"):
-            link = "https://zoom.us/j/"+link
+            link = "https://zoom.us/j/" + link
         elif (app == "gmeet"):
-            link = "https://meet.google.com/"+link
+            link = "https://meet.google.com/" + link
         else:
             link = link
 
@@ -506,12 +552,12 @@ def meetingAddPost():
             grading = False
         else:
             grading = True
-        
+
         if (not mandatory):
             mandatory = False
         else:
             mandatory = True
-        
+
         if (not checking):
             checking = False
         else:
@@ -521,7 +567,7 @@ def meetingAddPost():
             return "<h1>500 Internal Server Error</h1><br>No class with this name", 500
 
         new_meeting = Meetings(
-            class_id=classID.id, 
+            class_id=classID.id,
             required=mandatory,
             grading=grading,
             verifying=checking,
@@ -541,6 +587,7 @@ def meetingAddPost():
         return redirect(url_for("main.meetingAdd"))
     else:
         abort(403)
+
 
 @main.route("/meeting/edit/<int:id>", methods=["POST"])
 @login_required
@@ -582,9 +629,9 @@ def meetingEditPost(id):
             if pmi == "yes":
                 link = current_user.pmi
             if (app == "zoom"):
-                link = "https://zoom.us/j/"+link
+                link = "https://zoom.us/j/" + link
             elif (app == "gmeet"):
-                link = "https://meet.google.com/"+link
+                link = "https://meet.google.com/" + link
             else:
                 link = link
 
@@ -592,42 +639,43 @@ def meetingEditPost(id):
                 grading = False
             else:
                 grading = True
-            
+
             if (not mandatory):
                 mandatory = False
             else:
                 mandatory = True
-            
+
             if (not checking):
                 checking = False
             else:
                 checking = True
-            
+
             classID = Classes.query.filter_by(name=classname).first()
 
             if (not classID):
                 return "<h1>500 Internal Server Error</h1><br>No class with this name", 500
-            
+
             print(classID.name)
 
-            meeting.class_id=classID.id
-            meeting.required=mandatory
-            meeting.grading=grading
-            meeting.verifying=checking
-            meeting.description=desc
-            meeting.meetingApp=app
-            meeting.name=name
-            meeting.className=classID.name
-            meeting.link=link
-            meeting.date=date
-            meeting.hour=hour
-            meeting.teacher_id=current_user.id
+            meeting.class_id = classID.id
+            meeting.required = mandatory
+            meeting.grading = grading
+            meeting.verifying = checking
+            meeting.description = desc
+            meeting.meetingApp = app
+            meeting.name = name
+            meeting.className = classID.name
+            meeting.link = link
+            meeting.date = date
+            meeting.hour = hour
+            meeting.teacher_id = current_user.id
 
             db.session.commit()
 
             return redirect(url_for("main.meetingAdd"))
         else:
             abort(403)
+
 
 @main.route("/admin/users")
 @login_required
@@ -638,9 +686,11 @@ def allUsers():
     if (current_user.role == "admin"):
         pending = User.query.filter_by(confirmed=False).all()
         users = User.query.filter_by(confirmed=True).all()
-        return render_template("allusers.html", users=users, pendingusers=pending, strings=strings, name=current_user.first_name, role=current_user.role)
+        return render_template("allusers.html", users=users, pendingusers=pending, strings=strings,
+                               name=current_user.first_name, role=current_user.role)
     else:
         abort(403)
+
 
 @main.route("/admin/meetings")
 @login_required
@@ -650,12 +700,15 @@ def allMeetings():
 
     if (current_user.role == "admin"):
         meetings = Meetings.query.all()
-        return render_template("allmeetings.html", meetings=meetings, strings=strings, name=current_user.first_name, role=current_user.role)
+        return render_template("allmeetings.html", meetings=meetings, strings=strings, name=current_user.first_name,
+                               role=current_user.role)
     elif (current_user.role == "teacher"):
         meetings = Meetings.query.filter_by(teacher_id=current_user.id).all()
-        return render_template("allmeetings.html", meetings=meetings, strings=strings, name=current_user.first_name, role=current_user.role)
+        return render_template("allmeetings.html", meetings=meetings, strings=strings, name=current_user.first_name,
+                               role=current_user.role)
     else:
         abort(403)
+
 
 @main.route("/settings", methods=["GET"])
 @login_required
@@ -665,9 +718,11 @@ def settings():
 
     if current_user.role == "admin":
         q = Values.query.filter_by(name="blockregistration").first().value
-        return render_template("settings.html", strings=strings, name=current_user.first_name, role=current_user.role, max=getMax(), blockregister=q, lang=lang)
+        return render_template("settings.html", strings=strings, name=current_user.first_name, role=current_user.role,
+                               max=getMax(), blockregister=q, lang=lang)
     else:
         abort(403)
+
 
 @main.route("/settings", methods=["POST"])
 @login_required
@@ -695,6 +750,37 @@ def settingsPost():
         return redirect(url_for("main.settings"))
     else:
         abort(403)
+
+
+@main.route("/class/delete/<int:id>")
+@login_required
+def delete_class(id: int):
+    if current_user.role == "admin":
+        meetings = Meetings.query.filter_by(class_id=id).all()
+        for meeting in meetings:
+            db.session.delete(meeting)
+        class1 = Classes.query.filter_by(id=id).first()
+        db.session.delete(class1)
+        db.session.commit()
+        return redirect(url_for("main.addClass"))
+    else:
+        abort(403)
+
+
+@main.route("/meetinggroup/delete/<int:id>")
+@login_required
+def delete_group(id: int):
+    if current_user.role == "admin":
+        meetings = Meetings.query.filter_by(group_id=id).all()
+        for meeting in meetings:
+            db.session.delete(meeting)
+        group = MeetingGroup.query.filter_by(id=id).first()
+        db.session.delete(group)
+        db.session.commit()
+        return redirect(url_for("main.addGroup"))
+    else:
+        abort(403)
+
 
 @main.app_errorhandler(403)
 def error403(e):

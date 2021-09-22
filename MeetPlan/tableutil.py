@@ -3,9 +3,7 @@ from .models import Meetings, Classes, MeetingGroup
 from .emptyobject import EmptyObject
 from .objects import MeetingGroupObject
 
-def getOrderedList(classname):
-    week = getWeekList(getDate())
-
+def getOrderedList(classname, week = getWeekList(getDate())):
     classname = Classes.query.filter_by(name=classname).first()
 
     mon = []

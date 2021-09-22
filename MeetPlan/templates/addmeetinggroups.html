@@ -11,11 +11,11 @@
 </form>
 
 <h1> {{strings["ALL_GROUPS"]}} </h1>
-<ul>
+<table>
     {% for group in groups %}
-    <li> {{group.meetingGroup}}</li>
+        <tr> <td>{{group.meetingGroup}}</td><td><a href="/meetinggroup/delete/{{ group.id }}">{{ strings["DELETE_GROUP"] }}</a></td></tr>
     {% endfor %}
-  </ul>
+  </table>
 
 <script>
 // Get the Sidebar

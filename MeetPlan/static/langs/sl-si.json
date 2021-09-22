@@ -93,5 +93,8 @@
     "EXPORT": "Izvozi",
 
     "ADMIN_BLOCKED_REGISTRATION": "Administrator je blokiral vse registracije",
-    "BLOCK_REGISTRATIONS": "Blokiraj registracije"
+    "BLOCK_REGISTRATIONS": "Blokiraj registracije",
+    "REMOVE_CLASS": "Izbriši razred",
+    "DELETE_GROUP": "Izbriši skupino srečanj",
+    "NEXT_WEEK": "Naslednji teden:"
 }

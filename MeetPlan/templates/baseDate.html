@@ -72,3 +72,43 @@
       </tr>
       {% endfor %}
     </table>
+
+{% if isWeekend %}
+    <hr>
+    <h1>{{ strings["NEXT_WEEK"] }}</h1>
+    <br><table class="coolTable">
+      <tr>
+        <th>{{strings["HOUR"]}}</th>
+        <th>{{strings["MONDAY"]}} {{nextdates[0]}}</th>
+        <th>{{strings["TUESDAY"]}} {{nextdates[1]}}</th>
+        <th>{{strings["WEDNESDAY"]}} {{nextdates[2]}}</th>
+        <th>{{strings["THURSDAY"]}} {{nextdates[3]}}</th>
+        <th>{{strings["FRIDAY"]}} {{nextdates[4]}}</th>
+        <th>{{strings["SATURDAY"]}} {{nextdates[5]}}</th>
+      </tr>
+      {% for i in range(monnext|length) %}
+      <tr>
+        <th>{{i}}.</th>
+        <td onclick="javascript:myClick('{{monnext[i].id}}');">
+          {{ monnext[i].name }}
+        </td>
+        <td onclick="javascript:myClick('{{tuenext[i].id}}');">
+          {{ tuenext[i].name }}
+        </td>
+        <td onclick="javascript:myClick('{{wednext[i].id}}');">
+          {{ wednext[i].name }}
+        </td>
+        <td onclick="javascript:myClick('{{thunext[i].id}}');">
+          {{ thunext[i].name }}
+        </td>
+        <td onclick="javascript:myClick('{{frinext[i].id}}');">
+          {{ frinext[i].name }}
+        </td>
+        <td onclick="javascript:myClick('{{satnext[i].id}}');">
+          {{ satnext[i].name }}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+
+{% endif %}

@@ -11,11 +11,11 @@
 </form>
 
 <h1> {{strings["ALL_CLASSES"]}} </h1>
-<ul>
+<table>
     {% for class2 in classes %}
-    <li> {{class2.name}}</li>
+        <tr> <td>{{class2.name}}</td> <td><a href="/class/delete/{{ class2.id }}">{{ strings["REMOVE_CLASS"] }}</a></td></tr>
     {% endfor %}
-  </ul>
+  </table>
 
 <script>
 // Get the Sidebar
