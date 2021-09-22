@@ -15,6 +15,8 @@ function displayURL(meetingApp)
 {
   if (meetingApp == "zoom") {
     document.getElementById("url").innerHTML = 'https://zoom.us/j/';
+  } else if (meetingApp == "zoomlink") {
+    document.getElementById("url").innerHTML = 'Zoom URL: ';
   } else if (meetingApp == "skype") {
     document.getElementById("url").innerHTML = 'Skype URL: ';
   } else if (meetingApp == "jitsi") {
@@ -23,6 +25,8 @@ function displayURL(meetingApp)
     document.getElementById("url").innerHTML = 'Webex URL: ';
   } else if (meetingApp == "gmeet") {
     document.getElementById("url").innerHTML = 'https://meet.google.com/';
+  } else if (meetingApp == "msteams") {
+    document.getElementById("url").innerHTML = 'Microsoft Teams URL: ';
   }
 }
 </script>
@@ -66,7 +70,9 @@ function displayURL(meetingApp)
 <p></p>
 {{strings['PICK_A_CONF_APP']}}<br>
 <input type="radio" id="zoom" name="confapp" value="zoom" onclick="displayURL('zoom');" required>
-<label for="zoom">Zoom Meetings</label><br>
+<label for="zoom">Zoom Meetings ID</label><br>
+<input type="radio" id="zoomlink" name="confapp" value="zoomlink" onclick="displayURL('zoomlink');">
+<label for="zoomlink">Zoom Meetings URL</label><br>
 <input type="radio" id="skype" name="confapp" value="skype" onclick="displayURL('skype');">
 <label for="skype">Skype</label><br>
 <input type="radio" id="jitsi" name="confapp" value="jitsi" onclick="displayURL('jitsi');">
@@ -109,7 +115,7 @@ Link: <br>
 
 <p></p>
 <label for="group">{{strings["GROUP_WITH"]}}</label>
-<select id="group" name="group" value="none">
+<select id="group" name="group" value="{{groupsel}}">
 <option value="none">{{strings["NONE"]}}</option>
 {% for group in groups %}
   <option value="{{ group.meetingGroup }}">{{ group.meetingGroup }}</option>

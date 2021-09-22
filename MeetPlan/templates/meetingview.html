@@ -67,6 +67,12 @@
         {% if meeting.meetingApp == "jitsi" %}
             <td>Jitsi</td>
         {% endif %}
+        {% if meeting.meetingApp == "msteams" %}
+            <td>Microsoft Teams</td>
+        {% endif %}
+        {% if meeting.meetingApp == "zoomlink" %}
+            <td>Zoom</td>
+        {% endif %}
     </tr>
     <tr>
         <th>{{strings['CLASS']}}</th>

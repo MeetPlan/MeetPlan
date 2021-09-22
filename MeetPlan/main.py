@@ -280,7 +280,9 @@ def meetingEdit(id):
                                    date=meeting.date,
                                    className=class1.name,
                                    meetingHour=str(meeting.hour),
-                                   strings=strings
+                                   strings=strings,
+                                   groupsel=meeting.meetingGroup,
+                                   groups=MeetingGroup.query.all()
                                    ), 200
         else:
             abort(403)
@@ -510,9 +512,12 @@ def meetingAddPost():
 
         if group != "none":
             print("ok, grouped")
-            group = MeetingGroup.query.filter_by(meetingGroup=group).first().meetingGroup
+            group = MeetingGroup.query.filter_by(meetingGroup=group).first()
+            groupid = group.id
+            groupName = group.meetingGroup
         else:
-            group = None
+            groupid = None
+            groupName = None
 
         ifmeeting = Meetings.query.filter_by(date=date, hour=hour, class_id=classID.id).all()
         hmeeting = Meetings.query.filter_by(date=date, class_id=classID.id).all()
@@ -578,7 +583,8 @@ def meetingAddPost():
             date=date,
             hour=hour,
             teacher_id=current_user.id,
-            group_id=group
+            meetingGroup=groupName,
+            group_id=groupid
         )
 
         db.session.add(new_meeting)
@@ -606,9 +612,11 @@ def meetingEditPost(id):
             hour = request.form.get('hour')
             link = request.form.get('urlID')
             pmi = request.form.get("pmi")
-            print(classname)
+            group = request.form.get("group")
+            print(group)
             print(date)
 
+            groupName = MeetingGroup.query.filter_by(meetingGroup=group).first()
             className = Classes.query.filter_by(name=classname).first()
 
             ifmeeting = Meetings.query.filter_by(date=date, hour=hour, class_id=className.id).all()
@@ -616,6 +624,9 @@ def meetingEditPost(id):
             strings = getStrings(lang)
 
             ok = False
+            print(ifmeeting)
+            if len(ifmeeting) == 0:
+                ok = True
             for i in ifmeeting:
                 # Here is a problem
                 # Other teacher in group could probably edit it.
@@ -669,6 +680,9 @@ def meetingEditPost(id):
             meeting.date = date
             meeting.hour = hour
             meeting.teacher_id = current_user.id
+            meeting.meetingGroup = groupName.meetingGroup
+            meeting.group_id = groupName.id
+
 
             db.session.commit()
 

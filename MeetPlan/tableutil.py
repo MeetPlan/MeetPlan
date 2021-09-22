@@ -21,19 +21,19 @@ def getOrderedList(classname, week = getWeekList(getDate())):
             if meeting:
                 if len(meeting) > 1:
                     print(meeting[0].group_id)
-                    group = MeetingGroup.query.filter_by(meetingGroup=meeting[0].group_id).first()
+                    group = MeetingGroup.query.filter_by(id=meeting[0].group_id).first()
                     if index == 0:
-                        mon.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                        mon.append(MeetingGroupObject(meeting[0], group.meetingGroup, meeting))
                     elif index == 1:
-                        tue.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                        tue.append(MeetingGroupObject(meeting[0], group.meetingGroup, meeting))
                     elif index == 2:
-                        wed.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                        wed.append(MeetingGroupObject(meeting[0], group.meetingGroup, meeting))
                     elif index == 3:
-                        thu.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                        thu.append(MeetingGroupObject(meeting[0], group.meetingGroup, meeting))
                     elif index == 4:
-                        fri.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                        fri.append(MeetingGroupObject(meeting[0], group.meetingGroup, meeting))
                     elif index == 5:
-                        sat.append(MeetingGroupObject(meeting[0], group.meetingGroup))
+                        sat.append(MeetingGroupObject(meeting[0], group.meetingGroup, meeting))
                 else:
                     if index == 0:
                         mon.append(MeetingGroupObject(meeting[0], None))
