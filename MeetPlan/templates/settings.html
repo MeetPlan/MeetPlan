@@ -7,7 +7,7 @@
     <h1>{{strings['SETTINGS']}}: </h1>
 <form method="POST">
 <p></p>
-{{strings['PICK_A_LANG']}}<br>
+    <h3>{{strings['PICK_A_LANG']}}</h3>
 <input type="radio" id="en-US" name="lang" value="en-US" required {% if lang == "en-us" %}checked{% endif %}>
 <label for="en-US">English (USA) &nbsp; <img src="{{ url_for('static', filename='flags/us-flag.png')}}" height=20></label><br>
 <input type="radio" id="sl-SI" name="lang" value="sl-SI" {% if lang == "sl-si" %}checked{% endif %}>
@@ -17,11 +17,20 @@
 <label for="max">{{strings['PICK_A_MAX']}}</label>
 <input type="number" id="max" name="max" value="{{max}}" max="15" required>
 
-<br>
+<p></p>
 <label for="blockregister">{{strings['BLOCK_REGISTRATIONS']}}</label>
 <input type="checkbox" id="blockregister" name="blockregister" {% if blockregister == "1" %}checked{% endif %}>
 
+<p></p>
+<h3>{{strings['BLOCK_PASSWORD_CHANGE_TO']}}</h3>
+<label for="block_pass_change_teacher">{{strings['TEACHER']}}</label>
+<input type="checkbox" id="block_pass_change_teacher" name="block_pass_change_teacher" {% if block_pass_change_teacher == "on" %}checked{% endif %}>
 <br>
+<label for="block_pass_change_student">{{strings['STUDENT']}}</label>
+<input type="checkbox" id="block_pass_change_student" name="block_pass_change_student" {% if block_pass_change_student == "on" %}checked{% endif %}>
+
+
+<p></p><hr>
 <input type="submit" name="submit" value="{{strings['SEND']}}">
 </form>
 </div>

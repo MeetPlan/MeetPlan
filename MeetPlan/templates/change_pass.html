@@ -5,11 +5,10 @@
 <div class="w3-container">
 
 <form method="post">
-{% if enablePMI %}
-    <label for="pmi">{{strings["ADD_PMI"]}}</label>
-    <input type="text" id="pmi" name="pmi" value="{{ currentPMI }}"/>
-    <input type="submit" name="submit" value="{{strings['SEND']}}">
-{% endif %}
+<label for="oldpass">{{strings["OLD_PASS"]}}</label><input type="password" id="oldpass" name="oldpass" /><br>
+<label for="newpass">{{ strings["NEW_PASS_REPEAT"] }}</label><input type="password" id="newpass" name="newpass" /><br>
+<label for="newpassrepeat">{{ strings["NEW_PASS_REPEAT"] }}</label><input type="password" id="newpassrepeat" name="newpassrepeat" /><br>
+<input type="submit" name="submit" value="{{strings['SEND']}}">
 </form>
 
 <h1> {{strings["ALL_GROUPS"]}} </h1>

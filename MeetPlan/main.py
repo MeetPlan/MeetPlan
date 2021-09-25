@@ -1,5 +1,7 @@
 from flask import *
 from flask_login import login_user, logout_user, login_required, login_fresh, current_user
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from .models import *
 from .utils import *
 from .tableutil import *
@@ -292,13 +294,13 @@ def meetingEdit(id):
 
 @main.route("/approve/<int:id>", methods=["GET"])
 @login_required
-def approveUser(id):
+def approveUser(id: int):
     lang = getLang().lower()
     strings = getStrings(lang)
 
     user = User.query.filter_by(id=id).first()
     if user:
-        if (current_user.role == "admin"):
+        if current_user.role == "admin":
             user.confirmed = True
             db.session.commit()
             return redirect(url_for("main.allUsers"))
@@ -308,6 +310,77 @@ def approveUser(id):
         return render_template("404db.html", strings=strings, name=current_user.first_name, role=current_user.role)
 
 
+@main.route("/user/password/change", methods=["GET"])
+@login_required
+def changePassword():
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
+    block_pass = True
+    if current_user.role == "student":
+        v = Values.query.filter_by(name="block_pass_change_student").first()
+        print(v.value)
+        if v is None:
+            v = Values(name="block_pass_change_student", value=None)
+            db.session.add(v)
+            db.session.commit()
+        if v.value != "on":
+            block_pass = False
+    elif current_user.role == "teacher":
+        v = Values.query.filter_by(name="block_pass_change_teacher").first()
+        if v is None:
+            v = Values(name="block_pass_change_teacher", value=None)
+            db.session.add(v)
+            db.session.commit()
+        if v.value != "on":
+            block_pass = False
+    else:
+        block_pass = False
+    if not block_pass:
+        return render_template("change_pass.html", strings=strings, name=current_user.first_name, role=current_user.role)
+    else:
+        flash(strings["YOU_CANNOT_CHANGE_PASSWORD"])
+        return redirect(url_for("main.dashboard"))
+
+
+@main.route("/user/password/change", methods=["POST"])
+@login_required
+def changePasswordPost():
+    lang = getLang().lower()
+    strings = getStrings(lang)
+
+    block_pass = True
+    if current_user.role == "student":
+        v = Values.query.filter_by(name="block_pass_change_student").value
+        if v != "on":
+            block_pass = False
+    elif current_user.role == "teacher":
+        v = Values.query.filter_by(name="block_pass_change_teacher").value
+        if v != "on":
+            block_pass = False
+    else:
+        block_pass = False
+    if not block_pass:
+        oldpass = request.form.get("oldpass")
+        newpass = request.form.get("newpass")
+        newpassrepeat = request.form.get("newpassrepeat")
+        if newpass != newpassrepeat:
+            flash(strings["PASSWORDS_DONT_MATCH"])
+            return redirect(url_for("main.changePassword"))
+        if newpass == oldpass:
+            flash(strings["PASSWORD_CANNOT_EQUAL_OLD"])
+            return redirect(url_for("main.changePassword"))
+        if not check_password_hash(current_user.password, oldpass):
+            flash(strings["OLD_PASS_DOESNT_MATCH"])
+            return redirect(url_for("main.changePassword"))
+        user = User.query.filter_by(id=current_user.id).first()
+        user.password = generate_password_hash(newpass, method='sha256')
+        db.session.commit()
+        flash(strings["PASSWORD_CHANGED"])
+        return redirect(url_for("main.changePassword"))
+    else:
+        abort(403)
+
 @main.route("/user/settings", methods=["GET"])
 @login_required
 def userSettings():
@@ -316,6 +389,7 @@ def userSettings():
 
     return render_template(
         "usersettings.html",
+        enablePMI=current_user.role != "student",
         currentPMI=current_user.pmi,
         strings=strings,
         name=current_user.first_name,
@@ -327,8 +401,9 @@ def userSettings():
 @login_required
 def userSettingsPost():
     pmi = request.form.get("pmi")
-    user = User.query.filter_by(id=current_user.id).first()
-    user.pmi = pmi
+    if current_user.role != "student":
+        user = User.query.filter_by(id=current_user.id).first()
+        user.pmi = pmi
     db.session.commit()
     return redirect(url_for("main.userSettings"))
 
@@ -423,9 +498,11 @@ def groupView(id):
     print(classname)
     if meeting:
         weeklist = getWeekList(getDate())
-        # print(weeklist)
-        # print(meeting.date)
-        if (meeting.date in weeklist or current_user.role == "teacher" or current_user.role == "admin"):
+        current_date = str(getDate()).split(" ")[0]
+        isWeekend = False
+        if current_date in weeklist[5:]:
+            isWeekend = True
+        if meeting.date in weeklist or isWeekend or current_user.role == "teacher" or current_user.role == "admin":
             if meeting.group_id:
                 print("Meeting has a Group ID")
                 meeting = Meetings.query.filter_by(date=meeting.date, group_id=meeting.group_id,
@@ -454,9 +531,11 @@ def meetingView(id):
     print(classname)
     if meeting:
         weeklist = getWeekList(getDate())
-        # print(weeklist)
-        # print(meeting.date)
-        if (meeting.date in weeklist or current_user.role == "teacher" or current_user.role == "admin"):
+        current_date = str(getDate()).split(" ")[0]
+        isWeekend = False
+        if current_date in weeklist[5:]:
+            isWeekend = True
+        if meeting.date in weeklist or isWeekend or current_user.role == "teacher" or current_user.role == "admin":
             print(continue2)
             if continue2 == "true":
                 return render_template("meetingview.html", meeting=meeting, strings=strings,
@@ -732,8 +811,30 @@ def settings():
 
     if current_user.role == "admin":
         q = Values.query.filter_by(name="blockregistration").first().value
+
+        bl_pass_change_student = Values.query.filter_by(name="block_pass_change_student").first()
+        if bl_pass_change_student is None:
+            new = Values(name="block_pass_change_student", value=None)
+            db.session.add(new)
+            db.session.commit()
+            bl_pass_change_student = new.value
+        else:
+            bl_pass_change_student = bl_pass_change_student.value
+
+        bl_pass_change_teacher = Values.query.filter_by(name="block_pass_change_teacher").first()
+        if bl_pass_change_student is None:
+            new = Values(name="block_pass_change_teacher", value=None)
+            db.session.add(new)
+            db.session.commit()
+            bl_pass_change_teacher = new.value
+        else:
+            bl_pass_change_teacher = bl_pass_change_teacher.value
+
         return render_template("settings.html", strings=strings, name=current_user.first_name, role=current_user.role,
-                               max=getMax(), blockregister=q, lang=lang)
+                               max=getMax(), blockregister=q, lang=lang,
+                               block_pass_change_student=bl_pass_change_student,
+                               block_pass_change_teacher=bl_pass_change_teacher
+                               )
     else:
         abort(403)
 
@@ -745,8 +846,9 @@ def settingsPost():
         lang = request.form.get('lang')
         maxmeet = request.form.get('max')
         blockregister = request.form.get("blockregister")
+        block_pass_change_student = request.form.get("block_pass_change_student")
+        block_pass_change_teacher = request.form.get("block_pass_change_teacher")
 
-        max2 = getMax()
         max3 = Values.query.filter_by(name="max").first()
         max3.value = str(maxmeet)
 
@@ -759,6 +861,19 @@ def settingsPost():
         else:
             blockregister = "1"
         blockr.value = blockregister
+
+        block_pass_change_student_db = Values.query.filter_by(name="block_pass_change_student").first()
+        if block_pass_change_student_db is None:
+            new = Values(name="block_pass_change_student", value=block_pass_change_student)
+            db.session.add(new)
+        else:
+            block_pass_change_student_db.value = block_pass_change_student
+        block_pass_change_teacher_db = Values.query.filter_by(name="block_pass_change_teacher").first()
+        if block_pass_change_teacher_db is None:
+            new = Values(name="block_pass_change_teacher", value=block_pass_change_teacher)
+            db.session.add(new)
+        else:
+            block_pass_change_teacher_db.value = block_pass_change_teacher
 
         db.session.commit()
         return redirect(url_for("main.settings"))

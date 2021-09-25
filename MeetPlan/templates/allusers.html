@@ -1,8 +1,25 @@
 {% extends "base.html" %}
 
 {% block body %}
+<script>
+    function resetPass(id) {
+        fetch('/user/password/reset/' + id.toString(), {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8'
+            }
+        })
+        .then(response => response.text())
+        .then(response => {
+            console.log(response);
+            var l = '<div class="w3-main" style="margin-left:300px;margin-top:43px;"><div class="w3-red">' + response + '</div></div>';
+            document.getElementById("notify").innerHTML = l;
+        });
+    }
+</script>
 
 <div class="w3-container">
+<div id="notify"></div>
 
 <h1> {{strings["USERS_PENDING"]}} </h1>
 <table>
@@ -35,6 +52,7 @@
               <td><a href="/demote/{{user.id}}">{{strings["DEMOTE"]}}</a></td>
               <td><a href="/promote/teacher/{{user.id}}">{{strings["PROMOTE_TO_TEACHER"]}}</a></td>
               <td><a href="/promote/administrator/{{user.id}}">{{strings["PROMOTE_TO_ADMIN"]}}</a></td>
+              <td><a href="javascript:resetPass({{ user.id }})">{{strings["RESET_PASSWORD"]}}</a></td>
             {% endif %}
         </tr>
     {% endfor %}

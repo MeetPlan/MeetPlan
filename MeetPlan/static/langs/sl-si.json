@@ -96,5 +96,17 @@
     "BLOCK_REGISTRATIONS": "Blokiraj registracije",
     "REMOVE_CLASS": "Izbriši razred",
     "DELETE_GROUP": "Izbriši skupino srečanj",
-    "NEXT_WEEK": "Naslednji teden:"
+    "NEXT_WEEK": "Naslednji teden:",
+    "BLOCK_PASSWORD_CHANGE_TO": "Blokiraj spremembo gesla:",
+    "TEACHER": "Učitelju",
+    "STUDENT": "Učencu",
+    "NEW_PASS_REPEAT": "Ponovite novo geslo: ",
+    "NEW_PASS": "Novo geslo: ",
+    "OLD_PASS": "Staro geslo: ",
+    "PASSWORDS_DONT_MATCH": "Gesli se ne ujemata",
+    "PASSWORD_CANNOT_EQUAL_OLD": "Geslo ne sme biti enako staremu",
+    "OLD_PASS_DOESNT_MATCH": "Napačno staro geslo",
+    "PASSWORD_CHANGED": "Geslo je uspešno spremenjeno",
+    "YOU_CANNOT_CHANGE_PASSWORD": "Nimate pravic za spremembo gesla. Obrnite se na sistemskega administratorja.",
+    "RESET_PASSWORD": "Resetirajte geslo"
 }
