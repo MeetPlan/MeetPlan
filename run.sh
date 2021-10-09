@@ -1,1 +1,1 @@
-docker run -it -v $(pwd)/data:/db meetplan
+docker run -d -v $(pwd)/data:/db meetplan
