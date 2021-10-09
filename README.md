@@ -1,5 +1,3 @@
-<!-- This is a test comment -->
-
 # MeetPlan
 Plan Zoom, Google Duo, Skype... meetings
 

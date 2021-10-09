@@ -5,3 +5,4 @@ SQLAlchemy==1.3.23
 python-dotenv
 requests
 httpx
+gunicorn

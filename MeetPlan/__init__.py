@@ -1,16 +1,28 @@
 # init.py
-from os.path import join, dirname, realpath
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from dotenv import load_dotenv
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
 
+
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'd2f1c2742a2af47cc371dcfa32453fd3'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+
+    passf = open("pass.txt")
+
+    app.config['SECRET_KEY'] = passf.read()
+    passf.close()
+
+    load_dotenv()
+    docker = os.getenv("DOCKER")
+    if docker == "true":
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////db/db.sqlite'
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     db.init_app(app)
 
     login_manager = LoginManager()
