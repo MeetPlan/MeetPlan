@@ -82,6 +82,12 @@
         <th>{{strings['LINK']}}</th>
         <td><a href="{{ meeting.link }}">{{strings['CLICK_HERE_FOR_JOIN']}}</a></td>
     </tr>
+    {% if current_user.role == "teacher" or current_user.role == "admin" %}
+        <tr>
+            <th>{{ strings['EDIT'] }}</th>
+            <td><a href="/meeting/edit/{{ meeting.id }}">{{strings['EDIT']}}</a></td>
+        </tr>
+    {% endif %}
   </table>
 
 <script>

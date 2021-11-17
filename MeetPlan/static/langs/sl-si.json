@@ -108,5 +108,7 @@
     "OLD_PASS_DOESNT_MATCH": "Napačno staro geslo",
     "PASSWORD_CHANGED": "Geslo je uspešno spremenjeno",
     "YOU_CANNOT_CHANGE_PASSWORD": "Nimate pravic za spremembo gesla. Obrnite se na sistemskega administratorja.",
-    "RESET_PASSWORD": "Resetirajte geslo"
+    "RESET_PASSWORD": "Resetirajte geslo",
+    "INVALID_LINK": "Neveljavna povezava",
+    "EDIT": "Uredi"
 }

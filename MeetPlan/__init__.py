@@ -1,5 +1,7 @@
 # init.py
 import os
+import platform
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -20,8 +22,10 @@ def create_app():
     load_dotenv()
     docker = os.getenv("DOCKER")
     if docker == "true":
+        print("Using Docker database")
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////db/db.sqlite'
     else:
+        print("Using Local database")
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     db.init_app(app)
 

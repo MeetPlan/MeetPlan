@@ -11,3 +11,5 @@ Thumbs.db
 migrations/
 
 *.csv
+
+pass.txt

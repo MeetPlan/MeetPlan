@@ -280,6 +280,9 @@ def meetingEdit(id):
                                    classes=Classes.query.all(),
                                    meetingName=meeting.name,
                                    date=meeting.date,
+                                   mandatory=meeting.required,
+                                   grading=meeting.grading,
+                                   verifying=meeting.verifying,
                                    className=class1.name,
                                    meetingHour=str(meeting.hour),
                                    strings=strings,
@@ -696,6 +699,12 @@ def meetingEditPost(id):
             print(date)
 
             groupName = MeetingGroup.query.filter_by(meetingGroup=group).first()
+            meetinggroupname = None
+            groupid = None
+            if groupName:
+                meetinggroupname = groupName.meetingGroup
+                groupid = groupName.id
+
             className = Classes.query.filter_by(name=classname).first()
 
             ifmeeting = Meetings.query.filter_by(date=date, hour=hour, class_id=className.id).all()
@@ -718,6 +727,11 @@ def meetingEditPost(id):
 
             if pmi == "yes":
                 link = current_user.pmi
+
+            if not link:
+                flash(strings["INVALID_LINK"])
+                return redirect(url_for("main.meetingAdd"))
+
             if (app == "zoom"):
                 link = "https://zoom.us/j/" + link
             elif (app == "gmeet"):
@@ -759,8 +773,8 @@ def meetingEditPost(id):
             meeting.date = date
             meeting.hour = hour
             meeting.teacher_id = current_user.id
-            meeting.meetingGroup = groupName.meetingGroup
-            meeting.group_id = groupName.id
+            meeting.meetingGroup = meetinggroupname
+            meeting.group_id = groupid
 
 
             db.session.commit()

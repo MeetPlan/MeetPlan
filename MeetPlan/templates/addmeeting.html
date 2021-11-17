@@ -90,17 +90,17 @@ Link: <br>
 
 <p></p>
 <label>
-  <input type="checkbox" name="mandatory" id="mandatory">
+  <input type="checkbox" name="mandatory" id="mandatory" {% if mandatory %}checked{% endif %}>
   {{strings['NOT_MANDATORY']}}
 </label>
 <br>
 <label>
-  <input type="checkbox" name="grading" id="grading">
+  <input type="checkbox" name="grading" id="grading" {% if grading %}checked{% endif %}>
   {{strings['GRADING']}}
 </label>
 <br>
 <label>
-  <input type="checkbox" name="checking" id="checking">
+  <input type="checkbox" name="checking" id="checking" {% if verifying %}checked{% endif %}>
   {{strings['KNOWLEDGE_CHECKING']}}
 </label>
 
