@@ -721,6 +721,8 @@ def meetingEditPost(id):
                 # I will fix this as soon as possible
                 if i.teacher_id == current_user.id or current_user.admin:
                     ok = True
+                if i.meetingGroup != group:
+                    ok = False
             if not ok:
                 flash(strings["ALREADY_RESERVED"])
                 return redirect(url_for("main.meetingAdd"))
