@@ -723,6 +723,7 @@ def meetingEditPost(id):
                     ok = True
                 if i.meetingGroup != group:
                     ok = False
+                    break
             if not ok:
                 flash(strings["ALREADY_RESERVED"])
                 return redirect(url_for("main.meetingAdd"))
