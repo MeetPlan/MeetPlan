@@ -61,13 +61,13 @@
           {{ wed[i].name|safe }}
         </td>
         <td onclick="javascript:myClick('{{thu[i].id}}');">
-          {{ thu[i].name }}
+          {{ thu[i].name|safe }}
         </td>
         <td onclick="javascript:myClick('{{fri[i].id}}');">
-          {{ fri[i].name }}
+          {{ fri[i].name|safe }}
         </td>
         <td onclick="javascript:myClick('{{sat[i].id}}');">
-          {{ sat[i].name }}
+          {{ sat[i].name|safe }}
         </td>
       </tr>
       {% endfor %}
@@ -99,13 +99,13 @@
           {{ wednext[i].name|safe }}
         </td>
         <td onclick="javascript:myClick('{{thunext[i].id}}');">
-          {{ thunext[i].name }}
+          {{ thunext[i].name|safe }}
         </td>
         <td onclick="javascript:myClick('{{frinext[i].id}}');">
-          {{ frinext[i].name }}
+          {{ frinext[i].name|safe }}
         </td>
         <td onclick="javascript:myClick('{{satnext[i].id}}');">
-          {{ satnext[i].name }}
+          {{ satnext[i].name|safe }}
         </td>
       </tr>
       {% endfor %}
