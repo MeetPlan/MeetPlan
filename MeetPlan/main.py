@@ -592,6 +592,7 @@ def meetingAddPost():
 
         classID = Classes.query.filter_by(name=classname).first()
 
+        print(group)
         if group != "none":
             print("ok, grouped")
             group = MeetingGroup.query.filter_by(meetingGroup=group).first()
@@ -623,7 +624,13 @@ def meetingAddPost():
         if index >= maximum:
             flash(strings["MAXIMUM_EXCEEDED"])
             return redirect(url_for("main.meetingAdd"))
-        
+
+        # Prevent Grouping None
+        if ifmeeting and ifmeeting[0].group_id is None and groupid is None:
+            flash(strings["ALREADY_RESERVED"])
+            return redirect(url_for("main.meetingAdd"))
+
+        # Prevent having from not same group
         if ifmeeting and ifmeeting[0].group_id != groupid:
             flash(strings["ALREADY_RESERVED"])
             return redirect(url_for("main.meetingAdd"))
@@ -713,17 +720,20 @@ def meetingEditPost(id):
 
             ok = False
             print(ifmeeting)
-            if len(ifmeeting) == 0:
+
+            # Because we now it's gonna retrieve our meeting subtract 1
+            if len(ifmeeting)-1 == 0:
                 ok = True
             for i in ifmeeting:
-                # Here is a problem
-                # Other teacher in group could probably edit it.
-                # I will fix this as soon as possible
-                if i.teacher_id == current_user.id or current_user.admin:
-                    ok = True
-                if i.meetingGroup != group:
-                    ok = False
-                    break
+                if i.id != id:
+                    # Here is a problem
+                    # Other teacher in group could probably edit it.
+                    # I will fix this as soon as possible
+                    if i.teacher_id == current_user.id or current_user.admin:
+                        ok = True
+                    if i.meetingGroup != group:
+                        ok = False
+                        break
             if not ok:
                 flash(strings["ALREADY_RESERVED"])
                 return redirect(url_for("main.meetingAdd"))
