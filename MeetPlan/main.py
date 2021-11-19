@@ -721,8 +721,11 @@ def meetingEditPost(id):
             ok = False
             print(ifmeeting)
 
+            # If you want to add to different class or to different date or to different hour
+            if len(ifmeeting) == 0 and (meeting.class_id != className.id or meeting.date != date or meeting.hour != hour):
+                ok = True
             # Because we now it's gonna retrieve our meeting subtract 1
-            if len(ifmeeting)-1 == 0:
+            elif meeting.date == date and meeting.className == classname and len(ifmeeting)-1 == 0:
                 ok = True
             for i in ifmeeting:
                 if i.id != id:
